@@ -30,7 +30,7 @@ https://github.com/Kidddo/Raspberry-Pi-Print-Server
 
 
 
-## Physical plotter H@acked
+## Physical plotter H@cked
 
 ![alt text](https://github.com/CenterforFuturePublishing/Perpetual-print/blob/master/IMG_0238.jpg "Logo Title Text 1")
 
