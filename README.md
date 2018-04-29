@@ -29,7 +29,7 @@ https://github.com/electron/electron-api-demos
 https://github.com/Kidddo/Raspberry-Pi-Print-Server
 
 
-
+## HARDWARE
 ## Physical plotter H@cked
 
 ![alt text](https://github.com/CenterforFuturePublishing/Perpetual-print/blob/master/IMG_0238.jpg "Logo Title Text 1")
