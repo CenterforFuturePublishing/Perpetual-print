@@ -1,6 +1,6 @@
 
 
-# Perpetualprint
+# PerpetualPrint
 
 ## SOFTWARE
 
