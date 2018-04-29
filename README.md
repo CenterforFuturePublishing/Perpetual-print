@@ -1,4 +1,8 @@
+
+
 # Perpetualprint
+
+## SOFTWARE
 
 ## Code references for Node.js print
 
@@ -23,4 +27,8 @@ https://github.com/electron/electron-api-demos
 ## Raspberry Pi option
 
 https://github.com/Kidddo/Raspberry-Pi-Print-Server
+
+
+
+## Physical plotter H@acked
 
