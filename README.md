@@ -34,3 +34,5 @@ https://github.com/Kidddo/Raspberry-Pi-Print-Server
 
 ![alt text](https://github.com/CenterforFuturePublishing/Perpetual-print/blob/master/IMG_0238.jpg "Logo Title Text 1")
 
+![alt text](https://github.com/CenterforFuturePublishing/Perpetual-print/blob/master/Screen Shot 2018-04-29 at 14.40.40.png "Logo Title Text 1")
+
