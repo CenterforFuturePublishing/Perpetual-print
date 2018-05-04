@@ -77,7 +77,13 @@ void print() {
     String sFilePath = generatePDF(false);
 
     // Print the file
-    Process p = exec("lp", sFilePath);
+    String[] args = new String[0];
+    args = append(args, "lp");
+    args = append(args, "-o");
+    args = append(args, "media=rouleau");
+    args = append(args, sFilePath);
+    
+    Process p = exec(args);
     //Process p = exec("pwd");
 
     try {
