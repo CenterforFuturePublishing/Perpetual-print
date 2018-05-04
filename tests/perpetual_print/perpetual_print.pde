@@ -4,10 +4,13 @@ import processing.pdf.*;
 ControlP5 cp5;
 
 String pageWidth = "21";
-String pageHeight = "10";
+String pageHeight = "12";
 
 int pageHeightPoints = 0;
 int pageWidthPoints = 0;
+
+float cm2pt = 72 / 2.54;
+float pt2cm = 2.54 / 72;
 
 void setup () {
     size(400, 400);

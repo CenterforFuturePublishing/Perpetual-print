@@ -12,30 +12,52 @@ boolean drawPage(PGraphics p, int iPage0, String filePath) {
         fontText = createFont("arial", 10);
     }
 
+	String sFilename = new File(filePath).getName();
+
     p.translate(iPage0 * 100, 0);
 
-    p.translate(50, -50);
-
-    // Draw bottom lines
-    p.line(0, p.height, 120, p.height);
-    p.line(0, p.height, 0, p.height - 10);
+	int margin = round(2 * cm2pt);
 
     // Texts
     p.textFont(fontText);
+    p.textAlign(CENTER, CENTER);
     p.fill(0);
 
-    // Filename
-    p.textAlign(CENTER);
-    p.text(new File(filePath).getName(), 0, p.height - 100, 100, 50);
+	// Top left corner with margin
+	p.pushMatrix();
+	p.translate(margin, margin);
+
+    p.line(0, 0, 120, 0);
+    p.line(0, 0, 0, 60);
+	
+	p.text(sFilename, 0, 0, 100, 40);
 
     // Page number
-    p.textAlign(CENTER);
-    p.text("page " + (iPage0 + 1), 50, p.height - 10);
+    p.text("page " + (iPage0 + 1), 50, 50);
+
+	p.popMatrix();
+
+    // Bottom left
+    p.pushMatrix();
+    p.translate(margin, p.height - margin);
+    
+    // Draw bottom lines
+    p.line(0, 0, 120, 0);
+    p.line(0, 0, 0, -100);
+
+    // Filename
+    p.text(sFilename, 0, -100, 100, 40);
 
     // Doc size only on fist page
     //if (iPage0 == 0) {
-    p.text(getDocSize(), 50, p.height - 50);
+    p.text(getDocSize(), 50, -40);
     //}
+
+    // Page number
+    p.text("page " + (iPage0 + 1), 50, -10);
+
+    p.popMatrix();
+
 
     return iPage0 < 2;
 }
