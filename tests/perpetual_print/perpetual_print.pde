@@ -4,7 +4,7 @@ import processing.pdf.*;
 ControlP5 cp5;
 
 String pageWidth = "21";
-String pageHeight = "4";
+String pageHeight = "10";
 
 int pageHeightPoints = 0;
 int pageWidthPoints = 0;
@@ -104,12 +104,12 @@ String generatePDF(boolean preview) {
 
     int iPage0 = 0;
     boolean bDrawAnother = true;
-    while(bDrawAnother) {
+    while (bDrawAnother) {
         if (iPage0 > 0 && !preview) {
             ((PGraphicsPDF)pdf).nextPage();
         }
         pdf.pushMatrix();
-        bDrawAnother = drawPage(pdf, iPage0);
+        bDrawAnother = drawPage(pdf, iPage0, sFilePath);
         pdf.popMatrix();
         iPage0++;
     }
