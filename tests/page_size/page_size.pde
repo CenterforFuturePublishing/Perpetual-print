@@ -68,7 +68,7 @@ void generatePS() {
     sPages = sPages.replaceAll("\\{pageWidth\\}", pageWidthPoints + "");
     sPages = sPages.replaceAll("\\{pageHeight\\}", pageHeightPoints + "");
 
-    PrintWriter output = createWriter("test_pages.ps");
+    PrintWriter output = createWriter("output/test_pages.ps");
     output.println(sPages);
     output.flush();
     output.close();
@@ -78,7 +78,7 @@ void generatePDF() {
 
     PFont font = createFont("arial", 20);
 
-    PGraphics pdf = createGraphics(pageWidthPoints, pageHeightPoints, PDF, "test_pages.pdf");
+    PGraphics pdf = createGraphics(pageWidthPoints, pageHeightPoints, PDF, "output/test_pages.pdf");
 
     pdf.beginDraw();
 
@@ -101,7 +101,7 @@ void addPageToPDF(PGraphics pdf, int iPage) {
     pdf.pushMatrix();
     pdf.translate(iPage0 * 100, 0);
     pdf.line(0, pageHeightPoints, 120, pageHeightPoints);
-    pdf.line(100, pageHeightPoints, 100, pageHeightPoints - 10);
+    pdf.line(0, pageHeightPoints, 0, pageHeightPoints - 10);
     
     pdf.fill(0);
     pdf.textAlign(CENTER);
