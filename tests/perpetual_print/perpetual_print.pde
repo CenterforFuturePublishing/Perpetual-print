@@ -82,10 +82,10 @@ void print() {
     // Print the file
     String[] args = new String[0];
     args = append(args, "lp");
-    args = append(args, "-o");
-    args = append(args, "media=rouleau");
+    args = append(args, "-o media=Custom." + pageWidth + "." + pageHeight + "cm");
+    args = append(args, "-o scaling=100");
     args = append(args, sFilePath);
-    
+    println(join(args, " "));    
     Process p = exec(args);
     //Process p = exec("pwd");
 

@@ -12,35 +12,35 @@ boolean drawPage(PGraphics p, int iPage0, String filePath) {
         fontText = createFont("arial", 10);
     }
 
-	String sFilename = new File(filePath).getName();
+    String sFilename = new File(filePath).getName();
 
     p.translate(iPage0 * 100, 0);
 
-	int margin = round(2 * cm2pt);
+    int margin = round(2 * cm2pt);
 
     // Texts
     p.textFont(fontText);
     p.textAlign(CENTER, CENTER);
     p.fill(0);
 
-	// Top left corner with margin
-	p.pushMatrix();
-	p.translate(margin, margin);
+    // Top left corner with margin
+    p.pushMatrix();
+    p.translate(margin, margin);
 
     p.line(0, 0, 120, 0);
     p.line(0, 0, 0, 60);
-	
-	p.text(sFilename, 0, 0, 100, 40);
+
+    p.text(sFilename, 0, 0, 100, 40);
 
     // Page number
     p.text("page " + (iPage0 + 1), 50, 50);
 
-	p.popMatrix();
+    p.popMatrix();
 
     // Bottom left
     p.pushMatrix();
     p.translate(margin, p.height - margin);
-    
+
     // Draw bottom lines
     p.line(0, 0, 120, 0);
     p.line(0, 0, 0, -100);
