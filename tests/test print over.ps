@@ -1,0 +1,39 @@
+%!
+%% Test Print Over
+
+<</PageSize[595 100]/ImagingBBox null>>setpagedevice
+
+/Times-Roman findfont
+12 scalefont
+setfont
+
+
+/pageMark {
+	newpath
+	000 000 moveto
+	120 000 lineto
+	2 setlinewidth
+	stroke
+
+	newpath
+	050 010 moveto
+	(Page ) show
+	20 string cvs show
+} def
+
+000 000 translate
+1 pageMark
+showpage
+
+
+100 000 translate
+2 pageMark
+
+showpage
+
+
+200 000 translate
+3 pageMark
+
+showpage
+
