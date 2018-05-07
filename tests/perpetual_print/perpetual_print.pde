@@ -12,9 +12,15 @@ int pageWidthPoints = 0;
 float cm2pt = 72 / 2.54;
 float pt2cm = 2.54 / 72;
 
+JSONObject settings;
+
+String settingsFilename = "settings.json";
+
 void setup () {
     size(400, 400);
     PFont font = createFont("arial", 20);
+
+    loadSettings();
 
     cp5 = new ControlP5(this);
     cp5.setFont(font);
@@ -24,15 +30,15 @@ void setup () {
         .setSize(200, 30)
         //.setFocus(true)
         .setAutoClear(false)
-        .setValue(pageWidth)
+        .setValue(settings.getString("pageWidth", pageWidth))
         ;
 
     cp5.addTextfield("pageHeight")
         .setPosition(20, 200)
         .setSize(200, 30)
-        .setFocus(true)
+        //.setFocus(true)
         .setAutoClear(false)
-        .setValue(pageHeight)
+        .setValue(settings.getString("pageHeight", pageHeight))
         ;
 
     cp5.addButton("preview")
@@ -58,6 +64,40 @@ void draw () {
     text(getDocSize(), 
         20, 300); 
     //text(txtPageWidth.getStringValue() + " x " + txtPageHeight.getValue(), 20, 300);
+}
+
+void controlEvent(ControlEvent theEvent) {
+    if (theEvent.isAssignableFrom(Textfield.class)) {
+        if (Float.isNaN(float(theEvent.getStringValue()))) {
+            println("invalid");
+            ((Textfield)theEvent.getController()).setColor(color(255, 0, 0));
+        } else {
+            println("valid");
+            ((Textfield)theEvent.getController()).setColor(color(255));
+
+            saveSettings();
+        }
+    }
+}
+
+void loadSettings() {
+    try {
+        if (new File(sketchPath(settingsFilename)).exists()) {
+            settings = loadJSONObject(settingsFilename);
+        }
+    } 
+    catch(Exception e) {
+        println(e);
+    }
+    if (settings == null) {
+        settings = new JSONObject();
+    }
+}
+
+void saveSettings() {
+    settings.setString("pageWidth", pageWidth);
+    settings.setString("pageHeight", pageHeight);
+    saveJSONObject(settings, settingsFilename);
 }
 
 String getDocSize() {
