@@ -2,6 +2,7 @@ import controlP5.*;
 import processing.pdf.*;
 
 ControlP5 cp5;
+Toggle tglSendToPrinter;
 
 String pageWidth = "21";
 String pageHeight = "12";
@@ -16,9 +17,11 @@ JSONObject settings;
 
 String settingsFilename = "settings.json";
 
+boolean setupDone = false;
+
 void setup () {
     size(400, 400);
-    PFont font = createFont("arial", 20);
+    PFont font = createFont("arial", 16);
 
     loadSettings();
 
@@ -26,16 +29,16 @@ void setup () {
     cp5.setFont(font);
 
     cp5.addTextfield("pageWidth")
-        .setPosition(20, 100)
-        .setSize(200, 30)
+        .setPosition(20, 200)
+        .setSize(170, 30)
         //.setFocus(true)
         .setAutoClear(false)
         .setValue(settings.getString("pageWidth", pageWidth))
         ;
 
     cp5.addTextfield("pageHeight")
-        .setPosition(20, 200)
-        .setSize(200, 30)
+        .setPosition(210, 200)
+        .setSize(170, 30)
         //.setFocus(true)
         .setAutoClear(false)
         .setValue(settings.getString("pageHeight", pageHeight))
@@ -43,15 +46,24 @@ void setup () {
 
     cp5.addButton("preview")
         .setPosition(20, 20)
-        .setSize(100, 30)
+        .setSize(170, 30)
         ;
 
     cp5.addButton("print")
-        .setPosition(200, 20)
-        .setSize(100, 30)
+        .setPosition(210, 20)
+        .setSize(170, 30)
         ;
 
+    tglSendToPrinter = cp5.addToggle("sendToPrinter")
+        .setPosition(210, 80)
+        .setSize(50, 20)
+        .setLabel("Send to printer")
+        .setValue(settings.getBoolean("sendToPrinter", false));
+    ;
+
     textFont(font);
+
+    setupDone = true;
 }
 
 void draw () {
@@ -77,6 +89,10 @@ void controlEvent(ControlEvent theEvent) {
 
             saveSettings();
         }
+    } else {
+        if (setupDone) {
+            saveSettings();
+        }
     }
 }
 
@@ -97,6 +113,7 @@ void loadSettings() {
 void saveSettings() {
     settings.setString("pageWidth", pageWidth);
     settings.setString("pageHeight", pageHeight);
+    settings.setBoolean("sendToPrinter", tglSendToPrinter.getBooleanValue());
     saveJSONObject(settings, settingsFilename);
 }
 
@@ -119,24 +136,29 @@ void print() {
 
     String sFilePath = generatePDF(false);
 
-    // Print the file
-    String[] args = new String[0];
-    args = append(args, "lp");
-    args = append(args, "-o");
-    args = append(args, "media=Custom." + pageWidth + "." + pageHeight + "cm");
-    args = append(args, "-o");
-    args = append(args, "scaling=100");
-    args = append(args, sFilePath);
-    println(join(args, " "));    
-    Process p = exec(args);
-    //Process p = exec("pwd");
+    if (tglSendToPrinter.getBooleanValue()) {
+        // Print the file
+        String[] args = new String[0];
+        args = append(args, "lp");
+        args = append(args, "-o");
+        args = append(args, "media=Custom." + pageWidth + "." + pageHeight + "cm");
+        args = append(args, "-o");
+        args = append(args, "scaling=100");
+        args = append(args, sFilePath);
+        println(join(args, " "));    
+        Process p = exec(args);
+        //Process p = exec("pwd");
 
-    try {
-        int result = p.waitFor();
-        println("the process returned " + result);
-    } 
-    catch (InterruptedException e) {
-        println(e);
+        try {
+            int result = p.waitFor();
+            println("the process returned " + result);
+        } 
+        catch (InterruptedException e) {
+            println(e);
+        }
+    } else {
+        // open the file in its default app
+        launch(sFilePath);
     }
 }
 
