@@ -169,7 +169,7 @@ String generatePDF(boolean preview) {
     sFilePath += preview ? " preview" : " print";
     sFilePath += ".pdf";
 
-    PFont font = createFont("arial", 20);
+    Drawer drawer = createDrawer(selectedDrawer);
 
     PGraphics pdf = createGraphics(pageWidthPoints, pageHeightPoints, PDF, sFilePath);
 
@@ -182,7 +182,7 @@ String generatePDF(boolean preview) {
             ((PGraphicsPDF)pdf).nextPage();
         }
         pdf.pushMatrix();
-        bDrawAnother = drawPage(pdf, iPage0, sFilePath);
+        bDrawAnother = drawer.drawPage(pdf, iPage0, sFilePath);
         pdf.popMatrix();
         iPage0++;
     }
