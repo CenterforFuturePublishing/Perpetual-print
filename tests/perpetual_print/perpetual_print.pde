@@ -20,6 +20,7 @@ String settingsFilename = "settings.json";
 boolean setupDone = false;
 
 void setup () {
+    
     size(400, 400);
     PFont font = createFont("arial", 16);
 
@@ -170,6 +171,10 @@ String generatePDF(boolean preview) {
     sFilePath += ".pdf";
 
     Drawer drawer = createDrawer(selectedDrawer);
+    //Object odrawer = drawerClasses[0].newInstance();
+    //Drawer drawer = (Drawer)odrawer;
+    println("Drawing with " + drawer.getName());
+    println("Drawing with " + drawer.getClass().getName());
 
     PGraphics pdf = createGraphics(pageWidthPoints, pageHeightPoints, PDF, sFilePath);
 

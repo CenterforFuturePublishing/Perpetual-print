@@ -2,6 +2,11 @@
 // Temporary select here the drawer that has to be used. (until we get a list box)
 String selectedDrawer = "RectTestDavid01";
 
+
+Class[] drawerClasses = {
+   DrawerEmpty.class
+};
+
 // All drawers must have a name here
 String[] drawerNames = {
     "Empty", 
@@ -12,16 +17,15 @@ String[] drawerNames = {
 // All drawers must be created from this function 
 // Use the same name as in drawers variable above and the class name as defined below
 Drawer createDrawer(String name) {
-    
+
     switch(name) {
-        
+
     case "Empty":        
         return new DrawerEmpty();
     case "TestPage":        
         return new DrawerTestPage();
     case "RectTestDavid01":
         return new DrawerRectTestDavid01();
-        
     }
     return null;
 }
@@ -30,7 +34,10 @@ Drawer createDrawer(String name) {
 // This is the base class of all drawers
 // Create your drawer implementation by extenting this class, see examples below
 // Do not modify this class
-class Drawer {
+interface Drawer {
+
+    // Return the name of the drawer (example: "TestPage" for the class DrawerTestPage)
+    String getName();
 
     // Draw a page into a PGrapics. 
     // Size of drawing can be got from p.width and p.height
@@ -38,9 +45,7 @@ class Drawer {
     // PGrapics p  The context to draw the page
     // int iPage0  Page number (0 based)
     // return true to draw another page, false to stop drawing pages
-    boolean drawPage(PGraphics p, int iPage0, String filePath) {
-        return false;
-    }
+    boolean drawPage(PGraphics p, int iPage0, String filePath);
 }
 
 
@@ -54,7 +59,11 @@ class Drawer {
 
 // This drawers create 3 empty pages. It can be duplicated as a started for new drawers.  
 // (don't forget to change its name and this comment)
-class DrawerEmpty extends Drawer {
+class DrawerEmpty implements Drawer {
+
+    @Override String getName() {
+        return( "Empty");
+    }
 
     @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
@@ -64,9 +73,13 @@ class DrawerEmpty extends Drawer {
 
 
 // This drawer creates pages to test alignment on the plotter
-class DrawerTestPage extends Drawer {
+class DrawerTestPage implements Drawer {
 
     PFont fontText;
+
+    @Override String getName() {
+        return( "TestPage");
+    }
 
     @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
@@ -126,7 +139,11 @@ class DrawerTestPage extends Drawer {
 }
 
 // This drawer creates a pattern based on squares.
-class DrawerRectTestDavid01 extends Drawer {
+class DrawerRectTestDavid01 implements Drawer {
+
+    @Override String getName() {
+        return( "DrawerRectTestDavid01");
+    }
 
     @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
