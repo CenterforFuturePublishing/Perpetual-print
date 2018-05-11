@@ -1,43 +1,18 @@
 
 // Temporary select here the drawer that has to be used. (until we get a list box)
-String selectedDrawer = "RectTestDavid01";
+String selectedDrawer = "DrawerRectTestDavid01";
 
 
 Class[] drawerClasses = {
-   DrawerEmpty.class
+   DrawerEmpty.class,
+   DrawerTestPage.class
 };
-
-// All drawers must have a name here
-String[] drawerNames = {
-    "Empty", 
-    "TestPage", 
-    "RectTestDavid01"
-};
-
-// All drawers must be created from this function 
-// Use the same name as in drawers variable above and the class name as defined below
-Drawer createDrawer(String name) {
-
-    switch(name) {
-
-    case "Empty":        
-        return new DrawerEmpty();
-    case "TestPage":        
-        return new DrawerTestPage();
-    case "RectTestDavid01":
-        return new DrawerRectTestDavid01();
-    }
-    return null;
-}
 
 
 // This is the base class of all drawers
 // Create your drawer implementation by extenting this class, see examples below
 // Do not modify this class
-interface Drawer {
-
-    // Return the name of the drawer (example: "TestPage" for the class DrawerTestPage)
-    String getName();
+public interface Drawer {
 
     // Draw a page into a PGrapics. 
     // Size of drawing can be got from p.width and p.height
@@ -59,11 +34,7 @@ interface Drawer {
 
 // This drawers create 3 empty pages. It can be duplicated as a started for new drawers.  
 // (don't forget to change its name and this comment)
-class DrawerEmpty implements Drawer {
-
-    @Override String getName() {
-        return( "Empty");
-    }
+public class DrawerEmpty implements Drawer {
 
     @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
@@ -76,10 +47,6 @@ class DrawerEmpty implements Drawer {
 class DrawerTestPage implements Drawer {
 
     PFont fontText;
-
-    @Override String getName() {
-        return( "TestPage");
-    }
 
     @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
@@ -140,10 +107,6 @@ class DrawerTestPage implements Drawer {
 
 // This drawer creates a pattern based on squares.
 class DrawerRectTestDavid01 implements Drawer {
-
-    @Override String getName() {
-        return( "DrawerRectTestDavid01");
-    }
 
     @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 

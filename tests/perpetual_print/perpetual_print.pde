@@ -1,5 +1,6 @@
 import controlP5.*;
 import processing.pdf.*;
+import static javax.swing.JOptionPane.*;
 
 ControlP5 cp5;
 Toggle tglSendToPrinter;
@@ -20,7 +21,7 @@ String settingsFilename = "settings.json";
 boolean setupDone = false;
 
 void setup () {
-    
+
     size(400, 400);
     PFont font = createFont("arial", 16);
 
@@ -127,6 +128,7 @@ void preview() {
     println("preview");
 
     String sFilePath = generatePDF(true);
+    if (sFilePath == "") return;
 
     // open the file in its default app
     launch(sFilePath);
@@ -136,6 +138,7 @@ void print() {
     println("print");
 
     String sFilePath = generatePDF(false);
+    if (sFilePath == "") return;
 
     if (tglSendToPrinter.getBooleanValue()) {
         // Print the file
@@ -170,10 +173,25 @@ String generatePDF(boolean preview) {
     sFilePath += preview ? " preview" : " print";
     sFilePath += ".pdf";
 
-    Drawer drawer = createDrawer(selectedDrawer);
-    //Object odrawer = drawerClasses[0].newInstance();
-    //Drawer drawer = (Drawer)odrawer;
-    println("Drawing with " + drawer.getName());
+    Drawer drawer = null;
+    try {
+        //java.lang.reflect.Constructor constructor = drawerClasses[1].getDeclaredConstructor(this.getClass());
+        java.lang.reflect.Constructor constructor = Class.forName(this.getClass().getName() + "$" + selectedDrawer).getDeclaredConstructor(this.getClass());
+        drawer = (Drawer)constructor.newInstance(this);
+    }
+    catch(ClassNotFoundException e) {
+        showMessageDialog(null, "The drawer name is invalid: " + selectedDrawer, "Alert", ERROR_MESSAGE);
+        //println("The drawer name is invalid: " + selectedDrawer);
+        return "";
+    }
+    catch(Exception e) {
+        e.printStackTrace();
+        return "";
+    }
+    if (drawer == null) {
+        return "";
+    }
+    //println("Drawing with " + drawer.getName());
     println("Drawing with " + drawer.getClass().getName());
 
     PGraphics pdf = createGraphics(pageWidthPoints, pageHeightPoints, PDF, sFilePath);
