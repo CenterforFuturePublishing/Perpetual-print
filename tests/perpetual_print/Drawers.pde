@@ -1,34 +1,9 @@
 
-// Temporary select here the drawer that has to be used. (until we get a list box)
-String selectedDrawer = "DrawerRectTestDavid01";
-
-
-Class[] drawerClasses = {
-   DrawerEmpty.class,
-   DrawerTestPage.class
-};
-
-
-// This is the base class of all drawers
-// Create your drawer implementation by extenting this class, see examples below
-// Do not modify this class
-public interface Drawer {
-
-    // Draw a page into a PGrapics. 
-    // Size of drawing can be got from p.width and p.height
-    //
-    // PGrapics p  The context to draw the page
-    // int iPage0  Page number (0 based)
-    // return true to draw another page, false to stop drawing pages
-    boolean drawPage(PGraphics p, int iPage0, String filePath);
-}
-
 
 // ***************************************************************
 // Define your drawer classes below. Each drawer has its own class
-// The class name must begin with Drawer, then the name as given 
-// in the drawers variable above.
-// Example: 
+// The class name should begin with Drawer
+// Example: DrawerRectangles01
 // ***************************************************************
 
 
@@ -36,8 +11,16 @@ public interface Drawer {
 // (don't forget to change its name and this comment)
 public class DrawerEmpty implements Drawer {
 
+    // Draw a page into a PGrapics. 
+    // Size of drawing can be obtained from p.width and p.height
+    //
+    // PGrapics p  The context to draw the page
+    // int iPage0  Page number (0 based)
+    // String filePath The file being generated (mostly for debug and tests)
+    // return true to draw another page, false to stop drawing pages
     @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
+        // Stop after drawing 3rd page
         return iPage0 + 1 < 3;
     }
 }

@@ -1,9 +1,11 @@
 import controlP5.*;
 import processing.pdf.*;
 import static javax.swing.JOptionPane.*;
+import java.util.Map;
 
 ControlP5 cp5;
 Toggle tglSendToPrinter;
+ScrollableList lstDrawers;
 
 String pageWidth = "21";
 String pageHeight = "12";
@@ -20,6 +22,9 @@ String settingsFilename = "settings.json";
 
 boolean setupDone = false;
 
+ArrayList<String> lstDrawersNames = new ArrayList<String>();
+ArrayList<Class> lstDrawersClasses = new ArrayList<Class>();
+
 void setup () {
 
     size(400, 400);
@@ -27,24 +32,10 @@ void setup () {
 
     loadSettings();
 
+    initDrawers();
+
     cp5 = new ControlP5(this);
     cp5.setFont(font);
-
-    cp5.addTextfield("pageWidth")
-        .setPosition(20, 200)
-        .setSize(170, 30)
-        //.setFocus(true)
-        .setAutoClear(false)
-        .setValue(settings.getString("pageWidth", pageWidth))
-        ;
-
-    cp5.addTextfield("pageHeight")
-        .setPosition(210, 200)
-        .setSize(170, 30)
-        //.setFocus(true)
-        .setAutoClear(false)
-        .setValue(settings.getString("pageHeight", pageHeight))
-        ;
 
     cp5.addButton("preview")
         .setPosition(20, 20)
@@ -60,8 +51,32 @@ void setup () {
         .setPosition(210, 80)
         .setSize(50, 20)
         .setLabel("Send to printer")
-        .setValue(settings.getBoolean("sendToPrinter", false));
-    ;
+        .setValue(settings.getBoolean("sendToPrinter", false))
+        ;
+
+    cp5.addTextfield("pageWidth")
+        .setPosition(20, 200)
+        .setSize(170, 30)
+        .setAutoClear(false)
+        .setValue(settings.getString("pageWidth", pageWidth))
+        ;
+
+    cp5.addTextfield("pageHeight")
+        .setPosition(210, 200)
+        .setSize(170, 30)
+        .setAutoClear(false)
+        .setValue(settings.getString("pageHeight", pageHeight))
+        ;
+
+    lstDrawers = cp5.addScrollableList("drawer")
+        .setPosition(19, 141)
+        .setSize(362, 250)
+        .setBarHeight(30)
+        .setItemHeight(30)
+        .addItems(lstDrawersNames)
+        .setValue(max(0, lstDrawersNames.indexOf(settings.getString("drawer", lstDrawersNames.get(0)))))
+        ;
+
 
     textFont(font);
 
@@ -98,6 +113,41 @@ void controlEvent(ControlEvent theEvent) {
     }
 }
 
+void initDrawers() {
+
+    Class[] classes = getClass().getDeclaredClasses();
+    for (Class cls : classes) {
+        if (cls != Drawer.class && Drawer.class.isAssignableFrom(cls)) {
+            String clsName = cls.getSimpleName();
+            clsName = clsName.replace("Drawer", "");
+            clsName = clsName.replaceAll("([A-Z])", " $1").trim();
+            clsName = clsName.replaceAll("(\\d+)", " $1");
+            println(clsName);
+            lstDrawersNames.add(clsName);            
+            lstDrawersClasses.add(cls);
+        }
+    }
+}
+
+//ArrayList<String> getDrawersNames() {
+//    ArrayList<String> names = new ArrayList<String>();
+
+//    Class[] classes = getClass().getDeclaredClasses();
+//    for (Class cls : classes) {
+//        //System.out.println("Class = " + cls.getSimpleName());
+//        //System.out.println("   " + (Drawer.class.isAssignableFrom(cls) && cls != Drawer.class));
+//        if (cls != Drawer.class && Drawer.class.isAssignableFrom(cls)) {
+//            String clsName = cls.getSimpleName();
+//            clsName = clsName.replace("Drawer", "");
+//            clsName = clsName.replaceAll("([A-Z])", " $1").trim();
+//            clsName = clsName.replaceAll("(\\d+)", " $1").trim();
+//            println(clsName);
+//            names.add(clsName);
+//        }
+//    }
+//    return names;
+//}
+
 void loadSettings() {
     try {
         if (new File(sketchPath(settingsFilename)).exists()) {
@@ -116,6 +166,7 @@ void saveSettings() {
     settings.setString("pageWidth", pageWidth);
     settings.setString("pageHeight", pageHeight);
     settings.setBoolean("sendToPrinter", tglSendToPrinter.getBooleanValue());
+    settings.setString("drawer", lstDrawersNames.get((int)lstDrawers.getValue()));
     saveJSONObject(settings, settingsFilename);
 }
 
@@ -176,14 +227,15 @@ String generatePDF(boolean preview) {
     Drawer drawer = null;
     try {
         //java.lang.reflect.Constructor constructor = drawerClasses[1].getDeclaredConstructor(this.getClass());
-        java.lang.reflect.Constructor constructor = Class.forName(this.getClass().getName() + "$" + selectedDrawer).getDeclaredConstructor(this.getClass());
+        //java.lang.reflect.Constructor constructor = Class.forName(this.getClass().getName() + "$" + selectedDrawer).getDeclaredConstructor(this.getClass());
+        java.lang.reflect.Constructor constructor = lstDrawersClasses.get((int)lstDrawers.getValue()).getDeclaredConstructor(this.getClass());
         drawer = (Drawer)constructor.newInstance(this);
     }
-    catch(ClassNotFoundException e) {
-        showMessageDialog(null, "The drawer name is invalid: " + selectedDrawer, "Alert", ERROR_MESSAGE);
-        //println("The drawer name is invalid: " + selectedDrawer);
-        return "";
-    }
+    //catch(ClassNotFoundException e) {
+    //    showMessageDialog(null, "The drawer name is invalid: " + selectedDrawer, "Alert", ERROR_MESSAGE);
+    //    //println("The drawer name is invalid: " + selectedDrawer);
+    //    return "";
+    //}
     catch(Exception e) {
         e.printStackTrace();
         return "";
@@ -214,4 +266,20 @@ String generatePDF(boolean preview) {
     pdf.endDraw();
 
     return sFilePath;
+}
+
+
+// This is the base class of all drawers
+// Create your drawer implementation by extenting this class, see examples in Drawers tab
+// Do not modify this class
+public interface Drawer {
+
+    // Draw a page into a PGrapics. 
+    // Size of drawing can be obtained from p.width and p.height
+    //
+    // PGrapics p  The context to draw the page
+    // int iPage0  Page number (0 based)
+    // String filePath The file being generated (mostly for debug and tests)
+    // return true to draw another page, false to stop drawing pages
+    boolean drawPage(PGraphics p, int iPage0, String filePath);
 }
