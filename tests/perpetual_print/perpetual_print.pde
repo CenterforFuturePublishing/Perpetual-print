@@ -141,7 +141,7 @@ void print() {
         String[] args = new String[0];
         args = append(args, "lp");
         args = append(args, "-o");
-        args = append(args, "media=Custom." + pageWidth + "." + pageHeight + "cm");
+        args = append(args, "media=Custom." + pageWidth + "x" + pageHeight + "cm");
         args = append(args, "-o");
         args = append(args, "scaling=100");
         args = append(args, sFilePath);
