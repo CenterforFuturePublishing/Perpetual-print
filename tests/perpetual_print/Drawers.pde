@@ -111,19 +111,20 @@ class DrawerPointTestDavid01 implements Drawer {
 
   @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
-    int step = 1;
+    int step = 50; // changes the space between the dots
 
     p.noFill();
     p.stroke(0);
-    p.strokeWeight(3);
+    p.strokeWeight(10); // changes the size of the points
 
-    for (int y = 0; y < p.height; y += step) {
-      for (int x = 0; x < p.width; x += step) {
+    p.rotate(radians(iPage0)); // change the angle of the next page
+
+    for (int x = -p.height; x < p.height * 2; x += step) {
+      for (int y = -p.height; y < p.height * 2; y += step) {
         p.point(x, y);
       }
-      step++;
     }
 
-    return iPage0 + 1 < 5;
+    return iPage0 + 1 < 6;
   }
 }
