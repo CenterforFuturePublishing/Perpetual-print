@@ -115,16 +115,16 @@ class DrawerLineDavid02 implements Drawer {
 
   @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
-    int step = 1; // defines the distance between lines
+    int step = 10; // defines the distance between lines
 
     p.noFill();
     p.stroke(0);
-    p.strokeWeight(0.1); // defines the thickness of the lines
 
     for (int i = 0; i < p.height; i += step) {
-
-      p.line(sin(i) * p.width / 3, i, p.width - sin(i) * p.width / 3, i); // draw a line
-      step += 5;
+      float sw = map(i, 0, p.height, 0.1, 1);
+      p.strokeWeight(sw);
+      
+      p.line(0, i, p.width, i); // draw a line
     }
 
     return iPage0 + 1 < 1;
@@ -138,17 +138,17 @@ class DrawerLineDavid03 implements Drawer {
 
   @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
-    int step = p.height / 100; // defines the number of lines on the page
-    //int step = 100; // defines the distance between lines
+    int step = 50; // defines the distance between the lines
 
     p.noFill();
     p.stroke(0);
+    p.strokeWeight(1);
 
     for (int i = 0; i < p.height; i += step) {
-      float thickness = map(sin(i), -1, 1, 0.01, 0.1);
-      p.strokeWeight(thickness); // defines the thickness of the lines
+      float w01 = map(i, 0, p.height, p.width, 0);
+      float w02 = Math.abs(sin(i * 0.001)) * p.width;
 
-      p.line(0, i, p.width - noise(i) * p.width, i); // draw a line with perlin noise width
+      p.line(0, i, p.width - w02, i);
     }
 
     return iPage0 + 1 < 1;
@@ -161,20 +161,23 @@ class DrawerPointTestDavid01 implements Drawer {
 
   @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
-    int step = 50; // changes the space between the dots
+    int step = 10; // changes the space between the dots
 
     p.noFill();
     p.stroke(0);
-    p.strokeWeight(10); // changes the size of the points
+    p.strokeWeight(0.1); // changes the size of the points
 
-    p.rotate(radians(iPage0)); // change the angle of the next page
+    //p.rotate(radians(iPage0)); // change the angle of the next page
 
-    for (int x = -p.height; x < p.height * 2; x += step) {
-      for (int y = -p.height; y < p.height * 2; y += step) {
+    for (int x = 0; x < p.height; x += step) {
+      for (int y = 0; y < p.height; y += step) {
+        float sw = map(y, 0, p.height, 0.1, 1);
+        p.strokeWeight(sw);
+        
         p.point(x, y);
       }
     }
 
-    return iPage0 + 1 < 6;
+    return iPage0 + 1 < 1;
   }
 }
