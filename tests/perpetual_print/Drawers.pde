@@ -86,7 +86,7 @@ class DrawerTestPage implements Drawer {
   }
 }
 
-//// 01
+// 01 LINES
 // This drawer creates a pattern based on lines.
 class DrawerLineDavid01 implements Drawer {
 
@@ -109,7 +109,7 @@ class DrawerLineDavid01 implements Drawer {
 }
 
 
-//// 02
+// 02 LINES
 // This drawer creates a pattern based on lines.
 class DrawerLineDavid02 implements Drawer {
 
@@ -132,7 +132,7 @@ class DrawerLineDavid02 implements Drawer {
 }
 
 
-//// 03
+// 03 LINES
 // This drawer creates a pattern based on lines.
 class DrawerLineDavid03 implements Drawer {
 
@@ -155,6 +155,7 @@ class DrawerLineDavid03 implements Drawer {
   }
 }
 
+// 04 POINTS
 // This drawer creates a pattern based on points.
 class DrawerPointTestDavid01 implements Drawer {
 
