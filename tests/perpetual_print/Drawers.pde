@@ -87,22 +87,67 @@ class DrawerTestPage implements Drawer {
 }
 
 // This drawer creates a pattern based on lines.
-class DrawerLineTestDavid01 implements Drawer {
+class DrawerLineDavid01 implements Drawer {
 
   @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
-    int step = 1;
+    int step = p.height / 100; // defines the number of lines on the page
 
     p.noFill();
     p.stroke(0);
-    p.strokeWeight(1);
 
     for (int i = 0; i < p.height; i += step) {
-      p.line(0, i, p.width, i);
+      float thickness = map(sin(i), -1, 1, 0.01, 0.1);
+      p.strokeWeight(thickness); // defines the thickness of the lines
+
+      p.line(0, i, p.width, i); // draw a line
+    }
+
+    return iPage0 + 1 < 1;
+  }
+}
+
+// This drawer creates a pattern based on lines.
+class DrawerLineDavid02 implements Drawer {
+
+  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+
+    int step = 1; // defines the distance between lines
+
+    p.noFill();
+    p.stroke(0);
+    p.strokeWeight(0.1); // defines the thickness of the lines
+
+    for (int i = 0; i < p.height; i += step) {
+
+      p.line(0, i, p.width + sin(i) * p.width, i); // draw a line
       step++;
     }
 
-    return iPage0 + 1 < 5;
+    return iPage0 + 1 < 1;
+  }
+}
+
+// This drawer creates a pattern based on lines.
+class DrawerLineDavid03 implements Drawer {
+
+  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+
+    int step = p.height / 100; // defines the number of lines on the page
+    //int step = 100; // defines the distance between lines
+
+    p.noFill();
+    p.stroke(0);
+
+    for (int i = 0; i < p.height; i += step) {
+      float thickness = map(sin(i), -1, 1, 0.01, 0.1);
+      p.strokeWeight(thickness); // defines the thickness of the lines
+
+      p.line(0, i, p.width, i); // draw a line
+      //p.line(0, i, p.width + sin(i) * p.width, i);
+    }
+
+    return iPage0 + 1 < 1;
   }
 }
 
