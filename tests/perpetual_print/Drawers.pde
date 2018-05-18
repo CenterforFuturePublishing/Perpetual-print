@@ -86,6 +86,7 @@ class DrawerTestPage implements Drawer {
   }
 }
 
+//// 01
 // This drawer creates a pattern based on lines.
 class DrawerLineDavid01 implements Drawer {
 
@@ -107,6 +108,8 @@ class DrawerLineDavid01 implements Drawer {
   }
 }
 
+
+//// 02
 // This drawer creates a pattern based on lines.
 class DrawerLineDavid02 implements Drawer {
 
@@ -120,14 +123,16 @@ class DrawerLineDavid02 implements Drawer {
 
     for (int i = 0; i < p.height; i += step) {
 
-      p.line(0, i, p.width + sin(i) * p.width, i); // draw a line
-      step++;
+      p.line(sin(i) * p.width / 3, i, p.width - sin(i) * p.width / 3, i); // draw a line
+      step += 5;
     }
 
     return iPage0 + 1 < 1;
   }
 }
 
+
+//// 03
 // This drawer creates a pattern based on lines.
 class DrawerLineDavid03 implements Drawer {
 
@@ -143,8 +148,7 @@ class DrawerLineDavid03 implements Drawer {
       float thickness = map(sin(i), -1, 1, 0.01, 0.1);
       p.strokeWeight(thickness); // defines the thickness of the lines
 
-      p.line(0, i, p.width, i); // draw a line
-      //p.line(0, i, p.width + sin(i) * p.width, i);
+      p.line(0, i, p.width - noise(i) * p.width, i); // draw a line with perlin noise width
     }
 
     return iPage0 + 1 < 1;
