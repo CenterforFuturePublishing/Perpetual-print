@@ -1,6 +1,7 @@
 
 class Sequence {
 
+  // Data from sequences config file
   String name;
   StringList days = new StringList();
   StringList printers = new StringList();
@@ -8,20 +9,32 @@ class Sequence {
   boolean random = false;
   boolean loop = true;
 
+  // last drawer index used in drawers list 
+  int iLastDrawer = -1;
+  
+  boolean active = true;
+
   Sequence(JSONObject config) {
     init(config);
   }
 
   void draw() {
-    String currentDay = getCurrentDayOfWeek();
-
-    // Vérifier si cette séquence est active
-    if (days.size() == 0 || days.hasValue(currentDay)) {
-      //println("Sequence is active: " + name);
-
-      // Check if printer queues are empty
-      if (printerQueuesEmpty(printers)) {
-        sendNextDrawing();
+    
+    if (active) {
+      String currentDay = getCurrentDayOfWeek();
+  
+      // Vérifier si cette séquence est active
+      if (days.size() == 0 || days.hasValue(currentDay)) {
+        //println("Sequence is active: " + name);
+  
+        // Check if printer queues are empty
+        if (isPrinterQueuesEmpty(printers)) {
+          sendNextDrawing();
+        }
+      }
+      else {
+        // Inactivate this sequence. Program must restart every day to have a chance of running it
+       active = false; 
       }
     }
   }
@@ -60,19 +73,100 @@ class Sequence {
         "Sequence check", javax.swing.JOptionPane.WARNING_MESSAGE);
     }
 
+    // Register used printers
+    for (String printer : printers) {
+      lstUsedPrinters.appendUnique(printer);
+    }
+
     //println("days: " + days);
     //println("printers: " + printers);
     //println("drawers: " + drawers);
   }
 
   void sendNextDrawing () {
-    println("TODO: sendNextDrawing");
-    
+    println("\n\n***** sendNextDrawing *****");
+
+    String drawerClassName = nextDrawer();
+    if (drawerClassName == null) {
+      println("no more drawer");
+      active = false;
+      return;
+    }
+
+    String sFilePath = generatePDF(false, drawerClassName);
+    if (sFilePath == "") return;
+
+    // Use default printer if none specified
+    if (printers.size() == 0) {
+      println("TODO: get default printer name");
+      active = false;
+      return;
+    }
+
+    // Print file on all printers of the list
+    for (String printer : printers) {
+
+      // Pause the printer before sending the job so that we can resume them all when all jobs ready
+      //println("Pausing " + printer);
+      exec("cupsdisable", printer);
+
+      // Print the file
+      //println("printing to " + printer);
+      String[] args = new String[0];
+      args = append(args, "lp");
+      args = append(args, "-d");
+      args = append(args, printer);
+      args = append(args, "-o");
+      args = append(args, "media=Custom." + pageWidth + "x" + pageHeight + "cm");
+      args = append(args, "-o");
+      args = append(args, "scaling=100");
+      args = append(args, sFilePath);
+      println(join(args, " "));    
+      Process p = exec(args);
+
+      try {
+        int result = p.waitFor();
+        //println("the process returned " + result);
+      } 
+      catch (InterruptedException e) {
+        println(e);
+      }
+    }
+
+    // Resume all printers so they start at the same time
+    for (String printer : printers) {
+      //println("Resuming " + printer);
+      exec("cupsenable", printer);
+    }
+
+    println("***** sendNextDrawing done\n");
   }
-}
+
+  // return the name of the next drawer or null if there is no more
+  String nextDrawer() {
+    //println("Select next drawer");
+    int nextDrawer = -1;
+    if (random) {
+      nextDrawer = int(random(drawers.size()));
+    } else {
+      nextDrawer = iLastDrawer + 1;
+      if (nextDrawer >= drawers.size()) {
+        if (loop) {
+          nextDrawer = 0;
+        } else
+        {
+          return null;
+        }
+      }
+    }
+    iLastDrawer = nextDrawer;
+    return drawers.get(iLastDrawer);
+  }
+} // End of class
 
 ArrayList<Sequence> lstSequences = new ArrayList<Sequence>();
-StringList lstPrinters;
+StringList lstPrinters; // All printers available in the system
+StringList lstUsedPrinters = new StringList(); // Printers used by the sequences
 
 void setupSequences() {
 
@@ -93,6 +187,11 @@ void setupSequences() {
   // Create and init Sequence objects
   for (int i = 0; i < configSeq.size(); i++) {
     lstSequences.add(new Sequence(configSeq.getJSONObject(i)));
+  }
+
+  // clear queues of used printers
+  for (String printer : lstUsedPrinters) {
+    exec("lprm", "-P", printer);
   }
 }
 
@@ -121,8 +220,8 @@ StringList getPrinters() {
   return lst;
 }
 
-boolean printerQueuesEmpty (StringList printers) {
-  //println("TODO: printerQueuesEmpty"); 
+boolean isPrinterQueuesEmpty (StringList printers) {
+  //println("isPrinterQueuesEmpty"); 
 
   for (String printer : printers) {
     Process pr = exec(
@@ -133,10 +232,10 @@ boolean printerQueuesEmpty (StringList printers) {
 
     StringList out = readOutput(pr);
     //println(out);
-    
+
     // Jobs are listed starting at 3rd line
     if (out.size() > 2) {
-       return false; 
+      return false;
     }
   }
 

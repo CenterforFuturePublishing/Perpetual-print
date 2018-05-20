@@ -3,7 +3,6 @@
 		"name": "Ma séquence 1",
 		"description": "Une séquence pour plusieurs jours et sur plusieurs imprimantes en même temps",
 		"days": [
-			"dimanche", 
 			"mardi", 
 			"mercredi"
 			],
@@ -12,8 +11,8 @@
 			"HP_Printer_2"
 			],
 		"drawers": [
-			"DrawerEmpty",
 			"DrawerTestPage",
+			"DrawerEmpty",
 			"DrawerLineDavid01"
 		],
 		"random": true,
@@ -30,7 +29,7 @@
 			"DrawerTestPage",
 			"DrawerLineDavid01"
 		],
-		"random": true,
+		"random": false,
 		"loop": true
 	},
 

@@ -183,7 +183,7 @@ String getDocSize() {
 void preview() {
   println("preview");
 
-  String sFilePath = generatePDF(true);
+  String sFilePath = generatePDF(true, lstDrawersClassesNames.get((int)lstDrawers.getValue()));
   if (sFilePath == "") return;
 
   // open the file in its default app
@@ -193,7 +193,7 @@ void preview() {
 void print() {
   println("print");
 
-  String sFilePath = generatePDF(false);
+  String sFilePath = generatePDF(false, lstDrawersClassesNames.get((int)lstDrawers.getValue()));
   if (sFilePath == "") return;
 
   if (tglSendToPrinter.getBooleanValue()) {
@@ -222,18 +222,21 @@ void print() {
   }
 }
 
-String generatePDF(boolean preview) {
+String generatePDF(boolean preview, String drawerClassName) {
 
   String sFilePath = sketchPath() + "/output/";
   sFilePath += year() + "." + nf(month(), 2) + "." + nf(day(), 2) + " " + nf(hour(), 2) + "" + nf(minute(), 2) + "" + nf(second(), 2);
   sFilePath += preview ? " preview" : " print";
+  sFilePath += " " + drawerClassName;
   sFilePath += ".pdf";
 
   Drawer drawer = null;
   try {
     //java.lang.reflect.Constructor constructor = drawerClasses[1].getDeclaredConstructor(this.getClass());
     //java.lang.reflect.Constructor constructor = Class.forName(this.getClass().getName() + "$" + selectedDrawer).getDeclaredConstructor(this.getClass());
-    java.lang.reflect.Constructor constructor = lstDrawersClasses.get((int)lstDrawers.getValue()).getDeclaredConstructor(this.getClass());
+    java.lang.reflect.Constructor constructor = Class.forName(this.getClass().getName() + "$" + drawerClassName).getDeclaredConstructor(this.getClass());
+    //java.lang.reflect.Constructor constructor = lstDrawersClasses.get((int)lstDrawers.getValue()).getDeclaredConstructor(this.getClass());
+    
     drawer = (Drawer)constructor.newInstance(this);
   }
   //catch(ClassNotFoundException e) {
