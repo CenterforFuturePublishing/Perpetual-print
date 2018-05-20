@@ -22,8 +22,9 @@ String settingsFilename = "settings.json";
 
 boolean setupDone = false;
 
-ArrayList<String> lstDrawersNames = new ArrayList<String>();
-ArrayList<Class> lstDrawersClasses = new ArrayList<Class>();
+ArrayList<String> lstDrawersNames = new ArrayList<String>(); // Human readable version
+ArrayList<Class> lstDrawersClasses = new ArrayList<Class>(); // The classes objects 
+ArrayList<String> lstDrawersClassesNames = new ArrayList<String>(); // The classes names (used in config file) 
 
 void setup () {
 
@@ -77,8 +78,9 @@ void setup () {
     .setValue(max(0, lstDrawersNames.indexOf(settings.getString("drawer", lstDrawersNames.get(0)))))
     ;
 
-
   textFont(font);
+
+  setupSequences();
 
   setupDone = true;
 }
@@ -91,8 +93,10 @@ void draw () {
   pageHeightPoints = round(float(pageHeight) * 72 / 2.54);
 
   text(getDocSize(), 
-    20, 300); 
+    20, 315); 
   //text(txtPageWidth.getStringValue() + " x " + txtPageHeight.getValue(), 20, 300);
+  
+  drawSequences();
 }
 
 void controlEvent(ControlEvent theEvent) {
@@ -119,6 +123,7 @@ void initDrawers() {
   for (Class cls : classes) {
     if (cls != Drawer.class && Drawer.class.isAssignableFrom(cls)) {
       String clsName = cls.getSimpleName();
+      lstDrawersClassesNames.add(clsName);
       clsName = clsName.replace("Drawer", "");
       clsName = clsName.replaceAll("([A-Z])", " $1").trim();
       clsName = clsName.replaceAll("(\\d+)", " $1");
