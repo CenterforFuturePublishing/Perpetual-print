@@ -20,7 +20,7 @@ class Sequence {
       //println("Sequence is active: " + name);
 
       // Check if printer queues are empty
-      if (printerQueuesEmpty()) {
+      if (printerQueuesEmpty(printers)) {
         sendNextDrawing();
       }
     }
@@ -67,6 +67,7 @@ class Sequence {
 
   void sendNextDrawing () {
     println("TODO: sendNextDrawing");
+    
   }
 }
 
@@ -121,8 +122,25 @@ StringList getPrinters() {
 }
 
 boolean printerQueuesEmpty (StringList printers) {
-  println("TODO: printerQueuesEmpty"); 
-  return false;
+  //println("TODO: printerQueuesEmpty"); 
+
+  for (String printer : printers) {
+    Process pr = exec(
+      new String[] {"lpq", "-P", printer}, 
+      new String[] {"SOFTWARE=", "LANG=C"}, 
+      null
+      );
+
+    StringList out = readOutput(pr);
+    //println(out);
+    
+    // Jobs are listed starting at 3rd line
+    if (out.size() > 2) {
+       return false; 
+    }
+  }
+
+  return true;
 }
 
 // Check if the values of a list contains valid data
