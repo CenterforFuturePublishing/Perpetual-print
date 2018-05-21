@@ -86,32 +86,9 @@ class DrawerTestPage implements Drawer {
   }
 }
 
-// 01 LINES
-// This drawer creates a pattern based on lines.
-class DrawerLineDavid01 implements Drawer {
-
-  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
-
-    int step = p.height / 100; // defines the number of lines on the page
-
-    p.noFill();
-    p.stroke(0);
-
-    for (int i = 0; i < p.height; i += step) {
-      float thickness = map(sin(i), -1, 1, 0.01, 0.1);
-      p.strokeWeight(thickness); // defines the thickness of the lines
-
-      p.line(0, i, p.width, i); // draw a line
-    }
-
-    return iPage0 + 1 < 1;
-  }
-}
-
-
-// 02 LINES
-// This drawer creates a pattern based on lines.
-class DrawerLineDavid02 implements Drawer {
+// 01 LINES 100 % WIDTH
+// This drawer creates a pattern based on lines
+class DrawerLine100 implements Drawer {
 
   @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
@@ -121,9 +98,10 @@ class DrawerLineDavid02 implements Drawer {
     p.stroke(0);
 
     for (int i = 0; i < p.height; i += step) {
-      float sw = map(i, 0, p.height, 0.1, 1);
-      p.strokeWeight(sw);
-      
+      // Changes the weight of the line
+      float thickness = map(sin(i * 0.01), -1, 1, 0.1, 1);
+      p.strokeWeight(thickness);
+
       p.line(0, i, p.width, i); // draw a line
     }
 
@@ -132,20 +110,70 @@ class DrawerLineDavid02 implements Drawer {
 }
 
 
-// 03 LINES
-// This drawer creates a pattern based on lines.
-class DrawerLineDavid03 implements Drawer {
+// 02 LINES 50 % WIDTH
+// This drawer creates a pattern based on lines
+class DrawerLine50 implements Drawer {
 
   @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
-    int step = 50; // defines the distance between the lines
+    int step = 10; // defines the distance between lines
+
+    p.noFill();
+    p.stroke(0);
+
+    for (int i = 0; i < p.height; i += step) {
+      // Changes the weight of the line
+      float thickness = map(sin(i * 0.01), -1, 1, 0.1, 1);
+      p.strokeWeight(thickness);
+
+      p.line(0, i, p.width * 0.5, i); // draw a line
+    }
+
+    return iPage0 + 1 < 1;
+  }
+}
+
+
+// 03 LINES 5 % WIDTH
+// This drawer creates a pattern based on lines
+class DrawerLine5 implements Drawer {
+
+  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+
+    int step = 10; // defines the distance between lines
+
+    p.noFill();
+    p.stroke(0);
+
+    for (int i = 0; i < p.height; i += step) {
+      // Changes the weight of the line 
+      float thickness = map(sin(i * 0.01), -1, 1, 0.1, 1);
+      p.strokeWeight(thickness);
+
+      p.line(0, i, p.width * 0.05, i); // draw a line
+    }
+
+    return iPage0 + 1 < 1;
+  }
+}
+
+// 04 LINES SINE WIDTH
+// This drawer creates a pattern based on lines
+class DrawerLineSine implements Drawer {
+
+  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+
+    int step = 10; // defines the distance between the lines
 
     p.noFill();
     p.stroke(0);
     p.strokeWeight(1);
 
     for (int i = 0; i < p.height; i += step) {
+      // Diminishes the length of the line
       float w01 = map(i, 0, p.height, p.width, 0);
+      
+      // Change the length of the line with a sine
       float w02 = Math.abs(sin(i * 0.001)) * p.width;
 
       p.line(0, i, p.width - w02, i);
@@ -155,9 +183,9 @@ class DrawerLineDavid03 implements Drawer {
   }
 }
 
-// 04 POINTS
-// This drawer creates a pattern based on points.
-class DrawerPointTestDavid01 implements Drawer {
+// 05 POINTS 100 % WIDTH
+// This drawer creates a pattern based on points
+class DrawerPoint100 implements Drawer {
 
   @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
 
@@ -165,15 +193,99 @@ class DrawerPointTestDavid01 implements Drawer {
 
     p.noFill();
     p.stroke(0);
-    p.strokeWeight(0.1); // changes the size of the points
 
     //p.rotate(radians(iPage0)); // change the angle of the next page
 
-    for (int x = 0; x < p.height; x += step) {
+    for (int x = 0; x < p.width; x += step) {
       for (int y = 0; y < p.height; y += step) {
-        float sw = map(y, 0, p.height, 0.1, 1);
+        // Changes the weight of the point
+        float sw = map(y, 0, p.height, 0.5, 3);
         p.strokeWeight(sw);
-        
+
+        p.point(x, y);
+      }
+    }
+
+    return iPage0 + 1 < 1;
+  }
+}
+
+
+// 06 POINTS 50 % WIDTH
+// This drawer creates a pattern based on points
+class DrawerPoint50 implements Drawer {
+
+  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+
+    int step = 10; // changes the space between the dots
+
+    p.noFill();
+    p.stroke(0);
+
+    //p.rotate(radians(iPage0)); // change the angle of the next page
+
+    for (int x = 0; x < p.width * 0.5; x += step) {
+      for (int y = 0; y < p.height; y += step) {
+        // Changes the weight of the point
+        float sw = map(y, 0, p.height, 0.5, 3);
+        p.strokeWeight(sw);
+
+        p.point(x, y);
+      }
+    }
+
+    return iPage0 + 1 < 1;
+  }
+}
+
+
+// 07 POINTS 5 % WIDTH
+// This drawer creates a pattern based on points
+class DrawerPoint5 implements Drawer {
+
+  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+
+    int step = 10; // changes the space between the dots
+
+    p.noFill();
+    p.stroke(0);
+
+    //p.rotate(radians(iPage0)); // change the angle of the next page
+
+    for (int x = 0; x < p.width * 0.05; x += step) {
+      for (int y = 0; y < p.height; y += step) {
+        // Changes the weight of the point
+        float sw = map(y, 0, p.height, 0.5, 3);
+        p.strokeWeight(sw);
+
+        p.point(x, y);
+      }
+    }
+
+    return iPage0 + 1 < 1;
+  }
+}
+
+
+// 05 POINTS SINE WIDTH
+// This drawer creates a pattern based on points
+class DrawerPointSine implements Drawer {
+
+  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+
+    int step = 10; // changes the space between the dots
+
+    p.noFill();
+    p.stroke(0);
+
+    //p.rotate(radians(iPage0)); // change the angle of the next page
+
+    for (int x = 0; x < p.width; x += step) {
+      for (int y = 0; y < p.height; y += step) {
+        // Changes the weight of the point
+        float sw = map(sin(y * 0.005), -1, 1, 0.5, 3);
+        p.strokeWeight(sw);
+
         p.point(x, y);
       }
     }
