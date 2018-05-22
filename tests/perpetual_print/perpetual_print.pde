@@ -5,6 +5,7 @@ import java.util.Map;
 
 ControlP5 cp5;
 Toggle tglSendToPrinter;
+Toggle tglShowMode;
 ScrollableList lstDrawers;
 
 String pageWidth = "21";
@@ -22,8 +23,9 @@ String settingsFilename = "settings.json";
 
 boolean setupDone = false;
 
-ArrayList<String> lstDrawersNames = new ArrayList<String>();
-ArrayList<Class> lstDrawersClasses = new ArrayList<Class>();
+ArrayList<String> lstDrawersNames = new ArrayList<String>(); // Human readable version
+ArrayList<Class> lstDrawersClasses = new ArrayList<Class>(); // The classes objects 
+ArrayList<String> lstDrawersClassesNames = new ArrayList<String>(); // The classes names (used in config file) 
 
 void setup () {
 
@@ -77,6 +79,13 @@ void setup () {
     .setValue(max(0, lstDrawersNames.indexOf(settings.getString("drawer", lstDrawersNames.get(0)))))
     ;
 
+  boolean bShowMode = settings.getBoolean("showMode", false);
+  tglShowMode = cp5.addToggle("showMode")
+    .setPosition(210, 300)
+    .setSize(50, 20)
+    .setLabel("Show mode")
+    .setValue(bShowMode)
+    ;
 
   textFont(font);
 
@@ -91,8 +100,10 @@ void draw () {
   pageHeightPoints = round(float(pageHeight) * 72 / 2.54);
 
   text(getDocSize(), 
-    20, 300); 
+    20, 315); 
   //text(txtPageWidth.getStringValue() + " x " + txtPageHeight.getValue(), 20, 300);
+
+  drawSequences();
 }
 
 void controlEvent(ControlEvent theEvent) {
@@ -119,6 +130,7 @@ void initDrawers() {
   for (Class cls : classes) {
     if (cls != Drawer.class && Drawer.class.isAssignableFrom(cls)) {
       String clsName = cls.getSimpleName();
+      lstDrawersClassesNames.add(clsName);
       clsName = clsName.replace("Drawer", "");
       clsName = clsName.replaceAll("([A-Z])", " $1").trim();
       clsName = clsName.replaceAll("(\\d+)", " $1");
@@ -167,6 +179,7 @@ void saveSettings() {
   settings.setString("pageHeight", pageHeight);
   settings.setBoolean("sendToPrinter", tglSendToPrinter.getBooleanValue());
   settings.setString("drawer", lstDrawersNames.get((int)lstDrawers.getValue()));
+  settings.setBoolean("showMode", tglShowMode.getBooleanValue());
   saveJSONObject(settings, settingsFilename);
 }
 
@@ -178,7 +191,7 @@ String getDocSize() {
 void preview() {
   println("preview");
 
-  String sFilePath = generatePDF(true);
+  String sFilePath = generatePDF(true, lstDrawersClassesNames.get((int)lstDrawers.getValue()));
   if (sFilePath == "") return;
 
   // open the file in its default app
@@ -188,7 +201,7 @@ void preview() {
 void print() {
   println("print");
 
-  String sFilePath = generatePDF(false);
+  String sFilePath = generatePDF(false, lstDrawersClassesNames.get((int)lstDrawers.getValue()));
   if (sFilePath == "") return;
 
   if (tglSendToPrinter.getBooleanValue()) {
@@ -217,18 +230,29 @@ void print() {
   }
 }
 
-String generatePDF(boolean preview) {
+void showMode(boolean val) {
+  if (val) {
+    setupSequences();
+  } else {
+    clearSequences();
+  }
+}
+
+String generatePDF(boolean preview, String drawerClassName) {
 
   String sFilePath = sketchPath() + "/output/";
   sFilePath += year() + "." + nf(month(), 2) + "." + nf(day(), 2) + " " + nf(hour(), 2) + "" + nf(minute(), 2) + "" + nf(second(), 2);
   sFilePath += preview ? " preview" : " print";
+  sFilePath += " " + drawerClassName;
   sFilePath += ".pdf";
 
   Drawer drawer = null;
   try {
     //java.lang.reflect.Constructor constructor = drawerClasses[1].getDeclaredConstructor(this.getClass());
     //java.lang.reflect.Constructor constructor = Class.forName(this.getClass().getName() + "$" + selectedDrawer).getDeclaredConstructor(this.getClass());
-    java.lang.reflect.Constructor constructor = lstDrawersClasses.get((int)lstDrawers.getValue()).getDeclaredConstructor(this.getClass());
+    java.lang.reflect.Constructor constructor = Class.forName(this.getClass().getName() + "$" + drawerClassName).getDeclaredConstructor(this.getClass());
+    //java.lang.reflect.Constructor constructor = lstDrawersClasses.get((int)lstDrawers.getValue()).getDeclaredConstructor(this.getClass());
+
     drawer = (Drawer)constructor.newInstance(this);
   }
   //catch(ClassNotFoundException e) {
