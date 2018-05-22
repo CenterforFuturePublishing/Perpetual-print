@@ -15,7 +15,7 @@
 			"DrawerEmpty",
 			"DrawerLineDavid01"
 		],
-		"random": true,
+		"random": false,
 		"loop": true
 	},
 

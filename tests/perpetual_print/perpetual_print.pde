@@ -5,6 +5,7 @@ import java.util.Map;
 
 ControlP5 cp5;
 Toggle tglSendToPrinter;
+Toggle tglShowMode;
 ScrollableList lstDrawers;
 
 String pageWidth = "21";
@@ -78,9 +79,15 @@ void setup () {
     .setValue(max(0, lstDrawersNames.indexOf(settings.getString("drawer", lstDrawersNames.get(0)))))
     ;
 
-  textFont(font);
+  boolean bShowMode = settings.getBoolean("showMode", false);
+  tglShowMode = cp5.addToggle("showMode")
+    .setPosition(210, 300)
+    .setSize(50, 20)
+    .setLabel("Show mode")
+    .setValue(bShowMode)
+    ;
 
-  setupSequences();
+  textFont(font);
 
   setupDone = true;
 }
@@ -95,7 +102,7 @@ void draw () {
   text(getDocSize(), 
     20, 315); 
   //text(txtPageWidth.getStringValue() + " x " + txtPageHeight.getValue(), 20, 300);
-  
+
   drawSequences();
 }
 
@@ -172,6 +179,7 @@ void saveSettings() {
   settings.setString("pageHeight", pageHeight);
   settings.setBoolean("sendToPrinter", tglSendToPrinter.getBooleanValue());
   settings.setString("drawer", lstDrawersNames.get((int)lstDrawers.getValue()));
+  settings.setBoolean("showMode", tglShowMode.getBooleanValue());
   saveJSONObject(settings, settingsFilename);
 }
 
@@ -222,6 +230,14 @@ void print() {
   }
 }
 
+void showMode(boolean val) {
+  if (val) {
+    setupSequences();
+  } else {
+    clearSequences();
+  }
+}
+
 String generatePDF(boolean preview, String drawerClassName) {
 
   String sFilePath = sketchPath() + "/output/";
@@ -236,7 +252,7 @@ String generatePDF(boolean preview, String drawerClassName) {
     //java.lang.reflect.Constructor constructor = Class.forName(this.getClass().getName() + "$" + selectedDrawer).getDeclaredConstructor(this.getClass());
     java.lang.reflect.Constructor constructor = Class.forName(this.getClass().getName() + "$" + drawerClassName).getDeclaredConstructor(this.getClass());
     //java.lang.reflect.Constructor constructor = lstDrawersClasses.get((int)lstDrawers.getValue()).getDeclaredConstructor(this.getClass());
-    
+
     drawer = (Drawer)constructor.newInstance(this);
   }
   //catch(ClassNotFoundException e) {

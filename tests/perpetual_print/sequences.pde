@@ -13,6 +13,9 @@ class Sequence {
   int iLastDrawer = -1;
   
   boolean active = true;
+  
+  int checkPeriod = 5000; // ms
+  int nextCheck = 0;
 
   Sequence(JSONObject config) {
     init(config);
@@ -20,7 +23,11 @@ class Sequence {
 
   void draw() {
     
-    if (active) {
+    int ms = millis();
+    
+    if (active && ms > nextCheck) {
+      nextCheck += checkPeriod;
+      
       String currentDay = getCurrentDayOfWeek();
   
       // Vérifier si cette séquence est active
@@ -185,20 +192,25 @@ void setupSequences() {
   }
 
   // Create and init Sequence objects
+  lstSequences.clear();
+  lstUsedPrinters.clear();
   for (int i = 0; i < configSeq.size(); i++) {
     lstSequences.add(new Sequence(configSeq.getJSONObject(i)));
   }
 
   // clear queues of used printers
-  for (String printer : lstUsedPrinters) {
-    exec("lprm", "-P", printer);
-  }
+  clearUsedPrinterQueues();
 }
 
 void drawSequences() {
   for (Sequence seq : lstSequences) {
     seq.draw();
   }
+}
+
+void clearSequences() {
+  clearUsedPrinterQueues();
+  lstSequences.clear();
 }
 
 StringList getPrinters() {
@@ -220,8 +232,14 @@ StringList getPrinters() {
   return lst;
 }
 
+void clearUsedPrinterQueues() {
+  for (String printer : lstUsedPrinters) {
+    exec("lprm", "-P", printer);
+  }
+}
+
 boolean isPrinterQueuesEmpty (StringList printers) {
-  //println("isPrinterQueuesEmpty"); 
+  println("isPrinterQueuesEmpty"); 
 
   for (String printer : printers) {
     Process pr = exec(
