@@ -239,7 +239,7 @@ void clearUsedPrinterQueues() {
 }
 
 boolean isPrinterQueuesEmpty (StringList printers) {
-  println("isPrinterQueuesEmpty"); 
+  //println("isPrinterQueuesEmpty"); 
 
   for (String printer : printers) {
     Process pr = exec(
