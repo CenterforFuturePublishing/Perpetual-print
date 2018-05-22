@@ -86,7 +86,7 @@ class DrawerTestPage implements Drawer {
   }
 }
 
-// 01 LINES 100 % WIDTH
+// LINES 100 % WIDTH
 // This drawer creates a pattern based on lines
 class DrawerLine100 implements Drawer {
 
@@ -99,7 +99,7 @@ class DrawerLine100 implements Drawer {
 
     for (int i = 0; i < p.height; i += step) {
       // Changes the weight of the line
-      float thickness = map(sin(i * 0.01), -1, 1, 0.1, 1);
+      float thickness = map(sin(i * 0.001), -1, 1, 0.1, 1);
       p.strokeWeight(thickness);
 
       p.line(0, i, p.width, i); // draw a line
@@ -110,7 +110,7 @@ class DrawerLine100 implements Drawer {
 }
 
 
-// 02 LINES 50 % WIDTH
+// LINES 50 % WIDTH
 // This drawer creates a pattern based on lines
 class DrawerLine50 implements Drawer {
 
@@ -123,7 +123,7 @@ class DrawerLine50 implements Drawer {
 
     for (int i = 0; i < p.height; i += step) {
       // Changes the weight of the line
-      float thickness = map(sin(i * 0.01), -1, 1, 0.1, 1);
+      float thickness = map(sin(i * 0.001), -1, 1, 0.1, 1);
       p.strokeWeight(thickness);
 
       p.line(0, i, p.width * 0.5, i); // draw a line
@@ -134,7 +134,7 @@ class DrawerLine50 implements Drawer {
 }
 
 
-// 03 LINES 5 % WIDTH
+// LINES 5 % WIDTH
 // This drawer creates a pattern based on lines
 class DrawerLine5 implements Drawer {
 
@@ -147,7 +147,7 @@ class DrawerLine5 implements Drawer {
 
     for (int i = 0; i < p.height; i += step) {
       // Changes the weight of the line 
-      float thickness = map(sin(i * 0.01), -1, 1, 0.1, 1);
+      float thickness = map(sin(i * 0.001), -1, 1, 0.1, 1);
       p.strokeWeight(thickness);
 
       p.line(0, i, p.width * 0.05, i); // draw a line
@@ -156,8 +156,31 @@ class DrawerLine5 implements Drawer {
     return iPage0 + 1 < 1;
   }
 }
+// LINES 100-0 % WIDTH
+// This drawer creates a pattern based on lines
+class DrawerLine100_0 implements Drawer {
 
-// 04 LINES SINE WIDTH
+  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+
+    int step = 10; // defines the distance between lines
+
+    p.noFill();
+    p.stroke(0);
+    p.strokeWeight(1);
+
+    for (int i = 0; i < p.height; i += step) {
+      // Changes the weight of the line 
+      float w = map(i, 0, p.height, p.width, 0);
+
+      p.line(0, i, w, i); // draw a line
+    }
+
+    return iPage0 + 1 < 1;
+  }
+}
+
+
+// LINES SINE WIDTH
 // This drawer creates a pattern based on lines
 class DrawerLineSine implements Drawer {
 
@@ -172,7 +195,7 @@ class DrawerLineSine implements Drawer {
     for (int i = 0; i < p.height; i += step) {
       // Diminishes the length of the line
       float w01 = map(i, 0, p.height, p.width, 0);
-      
+
       // Change the length of the line with a sine
       float w02 = Math.abs(sin(i * 0.001)) * p.width;
 
@@ -183,7 +206,8 @@ class DrawerLineSine implements Drawer {
   }
 }
 
-// 05 POINTS 100 % WIDTH
+
+// POINTS 100 % WIDTH
 // This drawer creates a pattern based on points
 class DrawerPoint100 implements Drawer {
 
@@ -211,7 +235,7 @@ class DrawerPoint100 implements Drawer {
 }
 
 
-// 06 POINTS 50 % WIDTH
+// POINTS 50 % WIDTH
 // This drawer creates a pattern based on points
 class DrawerPoint50 implements Drawer {
 
@@ -239,7 +263,7 @@ class DrawerPoint50 implements Drawer {
 }
 
 
-// 07 POINTS 5 % WIDTH
+// POINTS 5 % WIDTH
 // This drawer creates a pattern based on points
 class DrawerPoint5 implements Drawer {
 
@@ -267,7 +291,7 @@ class DrawerPoint5 implements Drawer {
 }
 
 
-// 05 POINTS SINE WIDTH
+// POINTS SINE SIZE
 // This drawer creates a pattern based on points
 class DrawerPointSine implements Drawer {
 
