@@ -59,25 +59,25 @@ class Sequence {
     // Check valid configuration for days
     String error = checkListValues(days, new StringList("lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"));
     if (error != null) {
-      javax.swing.JOptionPane.showMessageDialog ( null, 
-        "Sequence '" + name + "' contains an error in 'days' section: \n\n" + error, 
-        "Sequence check", javax.swing.JOptionPane.WARNING_MESSAGE);
+      String msg = "Sequence '" + name + "' contains an error in 'days' section: \n\n" + error; 
+      log(msg);
+      javax.swing.JOptionPane.showMessageDialog ( null, msg, "Sequence check", javax.swing.JOptionPane.WARNING_MESSAGE);
     }
 
     // Check valid configuration for printers
     error = checkListValues(printers, lstPrinters);
     if (error != null) {
-      javax.swing.JOptionPane.showMessageDialog ( null, 
-        "Sequence '" + name + "' contains an error in 'printers' section: \n\n" + error, 
-        "Sequence check", javax.swing.JOptionPane.WARNING_MESSAGE);
+      String msg = "Sequence '" + name + "' contains an error in 'printers' section: \n\n" + error; 
+      log(msg);
+      javax.swing.JOptionPane.showMessageDialog ( null, msg, "Sequence check", javax.swing.JOptionPane.WARNING_MESSAGE);
     }
 
     // Check valid configuration for drawers
     error = checkListValues(drawers, new StringList(lstDrawersClassesNames.toArray()));
     if (error != null) {
-      javax.swing.JOptionPane.showMessageDialog ( null, 
-        "Sequence '" + name + "' contains an error in 'drawers' section: \n\n" + error, 
-        "Sequence check", javax.swing.JOptionPane.WARNING_MESSAGE);
+      String msg = "Sequence '" + name + "' contains an error in 'drawers' section: \n\n" + error; 
+      log(msg);      
+      javax.swing.JOptionPane.showMessageDialog ( null, msg, "Sequence check", javax.swing.JOptionPane.WARNING_MESSAGE);
     }
 
     // Register used printers
@@ -91,11 +91,11 @@ class Sequence {
   }
 
   void sendNextDrawing () {
-    println("\n\n***** sendNextDrawing *****");
+    log("***** sendNextDrawing *****");
 
     String drawerClassName = nextDrawer();
     if (drawerClassName == null) {
-      println("no more drawer");
+      log("no more drawer");
       active = false;
       return;
     }
@@ -105,7 +105,7 @@ class Sequence {
 
     // Use default printer if none specified
     if (printers.size() == 0) {
-      println("TODO: get default printer name");
+      log("TODO: get default printer name");
       active = false;
       return;
     }
@@ -128,30 +128,28 @@ class Sequence {
       args = append(args, "-o");
       args = append(args, "scaling=100");
       args = append(args, sFilePath);
-      println(join(args, " "));    
+      log("Print command: " + join(args, " "));    
       Process p = exec(args);
 
       try {
         int result = p.waitFor();
-        //println("the process returned " + result);
       } 
       catch (InterruptedException e) {
-        println(e);
+        log(e.toString());
       }
     }
 
     // Resume all printers so they start at the same time
     for (String printer : printers) {
-      //println("Resuming " + printer);
       exec("cupsenable", printer);
     }
 
-    println("***** sendNextDrawing done\n");
+    log("***** sendNextDrawing done");
   }
 
   // return the name of the next drawer or null if there is no more
   String nextDrawer() {
-    //println("Select next drawer");
+    //log("Select next drawer");
     int nextDrawer = -1;
     if (random) {
       nextDrawer = int(random(drawers.size()));
@@ -179,7 +177,7 @@ void setupSequences() {
 
   // Get list of printers
   lstPrinters = getPrinters();
-  println("Available printers: " + join (lstPrinters.array(), ", "));
+  log("Available printers: " + join (lstPrinters.array(), ", "));
 
   // Load JSON file
   JSONArray configSeq;
@@ -187,7 +185,7 @@ void setupSequences() {
     configSeq = loadJSONArray("sequences.json");
   } 
   catch (Exception e) {
-    //println(e);
+    //log(e.toString());
     return;
   }
 
@@ -223,7 +221,7 @@ StringList getPrinters() {
     );
 
   StringList lines = readOutput(pr);
-  //println("output: \n" +join(lines.array(), "\n"));
+  //log("output: \n" +join(lines.array(), "\n"));
 
   for (String line : lines) {
     lst.append(line.split(" ")[2].split(":")[0]);
@@ -299,7 +297,6 @@ import java.util.Locale;
 
 String getCurrentDayOfWeek() {
   SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.FRENCH);
-  Date d = new Date();
-  String dayOfTheWeek = sdf.format(d);
+  String dayOfTheWeek = sdf.format(new Date());
   return dayOfTheWeek;
 }
