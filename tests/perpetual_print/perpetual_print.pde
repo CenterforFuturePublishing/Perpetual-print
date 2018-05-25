@@ -29,6 +29,7 @@ ArrayList<Class> lstDrawersClasses = new ArrayList<Class>(); // The classes obje
 ArrayList<String> lstDrawersClassesNames = new ArrayList<String>(); // The classes names (used in config file) 
 
 String logFolder = "logs";
+File logFile = null;
 PrintWriter logger = null;
 SimpleDateFormat sdfLogger;
 int lastLogMs = 0;
@@ -146,7 +147,6 @@ void controlEvent(ControlEvent theEvent) {
       saveSettings();
     }
   }
-
 }
 
 void initDrawers() {
@@ -348,7 +348,9 @@ void log(String str) {
   if (logger == null) {
     sdfLogger = new SimpleDateFormat("Y-MM-dd HHmmss");
     String timestamp = sdfLogger.format(new Date());
-    logger = createWriter(logFolder + "/log " + timestamp + ".txt");
+    logFile = new File(logFolder + "/log " + timestamp + ".txt");
+    logger = createWriter(logFile);
+
     sdfLogger.applyPattern("YMMdd HH:mm:ss");
   }
 
@@ -363,6 +365,9 @@ void log(String str) {
   String time = sdfLogger.format(new Date());
   logger.println(time + "\t" + str);
   logger.flush();
+  
+  // Change file date so that DropBox will sync before it is closed
+  logFile.setLastModified(System.currentTimeMillis());
 
   // Send to console
   println(time + "  " + str);
