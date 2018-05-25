@@ -12,7 +12,7 @@ int getExitValue (Process pr) {
     exitValue = pr.waitFor();
   } 
   catch (InterruptedException e) {
-    println(e);
+    log(e.toString());
   }
   return exitValue;
 }
@@ -46,10 +46,10 @@ StringList readStream (Process pr, InputStream stream) {
     }
   } 
   catch (IOException e) {
-    println(e);
+    log(e.toString());
   }
   catch (InterruptedException e) {
-    println(e);
+    log(e.toString());
   }
   return lines;
 }
@@ -62,7 +62,7 @@ Process exec (String[] cmd, String[] env, File dir) {
     pr = Runtime.getRuntime().exec(cmd, env, dir);
   } 
   catch (Exception e) {
-    println(e);
+    log(e.toString());
     throw new RuntimeException(e);
   }
   return pr;

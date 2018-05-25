@@ -7,6 +7,7 @@ ControlP5 cp5;
 Toggle tglSendToPrinter;
 Toggle tglShowMode;
 ScrollableList lstDrawers;
+Textfield txtLogFolder;
 
 String pageWidth = "21";
 String pageHeight = "12";
@@ -27,9 +28,15 @@ ArrayList<String> lstDrawersNames = new ArrayList<String>(); // Human readable v
 ArrayList<Class> lstDrawersClasses = new ArrayList<Class>(); // The classes objects 
 ArrayList<String> lstDrawersClassesNames = new ArrayList<String>(); // The classes names (used in config file) 
 
+String logFolder = "logs";
+PrintWriter logger = null;
+SimpleDateFormat sdfLogger;
+int lastLogMs = 0;
+
+
 void setup () {
 
-  size(400, 400);
+  size(400, 600);
   PFont font = createFont("arial", 16);
 
   loadSettings();
@@ -87,6 +94,19 @@ void setup () {
     .setValue(bShowMode)
     ;
 
+  txtLogFolder = cp5.addTextfield("logFolder")
+    .setPosition(20, 380)
+    .setSize(width - 40, 30)
+    .setAutoClear(false)
+    .setValue(logFolder)
+    ;
+
+  cp5.addButton("changeLogPath")
+    .setPosition(210, 420)
+    .setSize(170, 30)
+    .setLabel("change")
+    ;
+
   textFont(font);
 
   setupDone = true;
@@ -107,21 +127,26 @@ void draw () {
 }
 
 void controlEvent(ControlEvent theEvent) {
-  if (theEvent.isAssignableFrom(Textfield.class)) {
+
+  switch(theEvent.getName()) {
+
+  case "pageWidth":
+  case "pageHeight":
     if (Float.isNaN(float(theEvent.getStringValue()))) {
-      println("invalid");
       ((Textfield)theEvent.getController()).setColor(color(255, 0, 0));
     } else {
-      println("valid");
       ((Textfield)theEvent.getController()).setColor(color(255));
 
       saveSettings();
     }
-  } else {
+
+    break;
+  default:
     if (setupDone) {
       saveSettings();
     }
   }
+
 }
 
 void initDrawers() {
@@ -134,7 +159,7 @@ void initDrawers() {
       clsName = clsName.replace("Drawer", "");
       clsName = clsName.replaceAll("([A-Z])", " $1").trim();
       clsName = clsName.replaceAll("(\\d+)", " $1");
-      println(clsName);
+      log(clsName);
       lstDrawersNames.add(clsName);            
       lstDrawersClasses.add(cls);
     }
@@ -164,10 +189,13 @@ void loadSettings() {
   try {
     if (new File(sketchPath(settingsFilename)).exists()) {
       settings = loadJSONObject(settingsFilename);
+      pageWidth = settings.getString("pageWidth", pageWidth);
+      pageHeight = settings.getString("pageHeight", pageHeight);
+      logFolder = settings.getString("logFolder", logFolder);
     }
   } 
   catch(Exception e) {
-    println(e);
+    log(e.toString());
   }
   if (settings == null) {
     settings = new JSONObject();
@@ -175,11 +203,13 @@ void loadSettings() {
 }
 
 void saveSettings() {
+  log("saving settings");
   settings.setString("pageWidth", pageWidth);
   settings.setString("pageHeight", pageHeight);
   settings.setBoolean("sendToPrinter", tglSendToPrinter.getBooleanValue());
   settings.setString("drawer", lstDrawersNames.get((int)lstDrawers.getValue()));
   settings.setBoolean("showMode", tglShowMode.getBooleanValue());
+  settings.setString("logFolder", logFolder);
   saveJSONObject(settings, settingsFilename);
 }
 
@@ -189,7 +219,7 @@ String getDocSize() {
 }
 
 void preview() {
-  println("preview");
+  log("preview button pressed");
 
   String sFilePath = generatePDF(true, lstDrawersClassesNames.get((int)lstDrawers.getValue()));
   if (sFilePath == "") return;
@@ -199,7 +229,7 @@ void preview() {
 }
 
 void print() {
-  println("print");
+  log("print button pressed");
 
   String sFilePath = generatePDF(false, lstDrawersClassesNames.get((int)lstDrawers.getValue()));
   if (sFilePath == "") return;
@@ -213,16 +243,16 @@ void print() {
     args = append(args, "-o");
     args = append(args, "scaling=100");
     args = append(args, sFilePath);
-    println(join(args, " "));    
+    log(join(args, " "));    
     Process p = exec(args);
     //Process p = exec("pwd");
 
     try {
       int result = p.waitFor();
-      println("the process returned " + result);
+      log("the process returned " + result);
     } 
     catch (InterruptedException e) {
-      println(e);
+      log(e.toString());
     }
   } else {
     // open the file in its default app
@@ -236,6 +266,26 @@ void showMode(boolean val) {
   } else {
     clearSequences();
   }
+}
+
+void changeLogPath() {
+  selectFolder("Select a folder to store log files:", "logFolderSelected");
+}
+
+void logFolderSelected(File selection) {
+  if (selection != null) {
+    log("User selected new log folder: " + selection.getAbsolutePath());
+    logFolder = selection.getAbsolutePath();
+    txtLogFolder.setValue(logFolder);
+    saveSettings();
+    javax.swing.JOptionPane.showMessageDialog ( null, "Restart the app to use new log folder", "Log folder", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+  }
+}
+
+void logFolder(String value) {
+  logFolder = value;
+  log("User changed log folder to: " + logFolder);
+  javax.swing.JOptionPane.showMessageDialog ( null, "Restart the app to use new log folder", "Log folder", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 }
 
 String generatePDF(boolean preview, String drawerClassName) {
@@ -268,7 +318,7 @@ String generatePDF(boolean preview, String drawerClassName) {
     return "";
   }
   //println("Drawing with " + drawer.getName());
-  println("Drawing with " + drawer.getClass().getName());
+  log("Drawing with " + drawer.getClass().getSimpleName());
 
   PGraphics pdf = createGraphics(pageWidthPoints, pageHeightPoints, PDF, sFilePath);
 
@@ -292,6 +342,32 @@ String generatePDF(boolean preview, String drawerClassName) {
   return sFilePath;
 }
 
+void log(String str) {
+
+  if (logger == null) {
+    sdfLogger = new SimpleDateFormat("Y-MM-dd HHmmss");
+    String timestamp = sdfLogger.format(new Date());
+    logger = createWriter(logFolder + "/log " + timestamp + ".txt");
+    sdfLogger.applyPattern("YMMdd HH:mm:ss");
+  }
+
+  // Add empty line between sequences of messages
+  int ms = millis();
+  if (ms - lastLogMs > 1000) {
+    logger.println();
+    println();
+  }
+
+  // Send to file
+  String time = sdfLogger.format(new Date());
+  logger.println(time + "\t" + str);
+  logger.flush();
+
+  // Send to console
+  println(time + "  " + str);
+
+  lastLogMs = ms;
+}
 
 // This is the base class of all drawers
 // Create your drawer implementation by extenting this class, see examples in Drawers tab
