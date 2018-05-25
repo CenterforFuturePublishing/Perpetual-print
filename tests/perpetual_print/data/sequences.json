@@ -2,46 +2,44 @@
 	{
 		"name": "Ma séquence 1",
 		"description": "Une séquence pour plusieurs jours et sur plusieurs imprimantes en même temps",
-		"days": [
+		"DISABLED_days": [
 			"mardi", 
 			"mercredi",
 			"vendredi"
 			],
 		"printers" : [
-			"HP_Printer_1",
-			"HP_Printer_2"
+			"HP_printer_1"
 			],
 		"drawers": [
-			"DrawerTestPage",
 			"DrawerEmpty",
-			"DrawerLine100"
+			"DrawerLine0_100Sine",
+			"DrawerLine0_50Sine",
+			"DrawerLine0_5Sine",
+			"DrawerLine10_15Sine",
+			"DrawerLine15_20Sine",
+			"DrawerLine20_25Sine",
+			"DrawerLine25_30Sine",
+			"DrawerLine30_35Sine",
+			"DrawerLine35_40Sine",
+			"DrawerLine40_45Sine",
+			"DrawerLine45_50Sine",
+			"DrawerLine50_100Sine",
+			"DrawerLine50_55Sine",
+			"DrawerLine55_60Sine",
+			"DrawerLine5_10Sine",
+			"DrawerLine60_65Sine",
+			"DrawerLine65_70Sine",
+			"DrawerLine70_75Sine",
+			"DrawerLine75_80Sine",
+			"DrawerLine80_85Sine",
+			"DrawerLine85_90Sine",
+			"DrawerLine90_95Sine",
+			"DrawerLine95_100Sine",
+			"DrawerTestPage"			
 		],
-		"random": false,
-		"loop": true
-	},
-
-
-	{
-		"name": "Ma séquence 2 du jeudi sur la première imprimante",
-		"days": "jeudi",
-		"printers" : "HP_Printer_1",
-		"drawers": [
-			"DrawerEmpty",
-			"DrawerTestPage",
-			"DrawerLine100"
-		],
-		"random": false,
-		"loop": true
-	},
-
-
-	{
-		"name": "Ma séquence 3 du jeudi sur l'autre imprimante",
-		"days": "jeudi",
-		"printers" : "HP_Printer_2",
-		"drawers": "DrawerEmpty",
 		"random": true,
 		"loop": true
 	}
+
 
 ]

@@ -1,0 +1,47 @@
+[
+	{
+		"name": "Ma séquence 1",
+		"description": "Une séquence pour plusieurs jours et sur plusieurs imprimantes en même temps",
+		"days": [
+			"mardi", 
+			"mercredi",
+			"vendredi"
+			],
+		"printers" : [
+			"HP_printer_1",
+			"HP_printer_2"
+			],
+		"drawers": [
+			"DrawerTestPage",
+			"DrawerEmpty",
+			"DrawerLine100"
+		],
+		"random": false,
+		"loop": true
+	},
+
+
+	{
+		"name": "Ma séquence 2 du jeudi sur la première imprimante",
+		"days": "jeudi",
+		"printers" : "HP_printer_1",
+		"drawers": [
+			"DrawerEmpty",
+			"DrawerTestPage",
+			"DrawerLine100"
+		],
+		"random": false,
+		"loop": true
+	},
+
+
+	{
+		"name": "Ma séquence 3 du jeudi sur l'autre imprimante",
+		"days": "jeudi",
+		"printers" : "HP_printer_2",
+		"drawers": "DrawerEmpty",
+		"random": true,
+		"loop": true
+	}
+
+]
