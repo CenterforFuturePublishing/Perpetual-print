@@ -151,15 +151,16 @@ void controlEvent(ControlEvent theEvent) {
 
 void initDrawers() {
 
+  log("Available drawers:");
   Class[] classes = getClass().getDeclaredClasses();
   for (Class cls : classes) {
     if (cls != Drawer.class && Drawer.class.isAssignableFrom(cls)) {
       String clsName = cls.getSimpleName();
+      log("    " + clsName);
       lstDrawersClassesNames.add(clsName);
       clsName = clsName.replace("Drawer", "");
       clsName = clsName.replaceAll("([A-Z])", " $1").trim();
       clsName = clsName.replaceAll("(\\d+)", " $1");
-      log(clsName);
       lstDrawersNames.add(clsName);            
       lstDrawersClasses.add(cls);
     }
