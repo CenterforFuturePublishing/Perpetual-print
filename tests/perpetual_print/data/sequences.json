@@ -37,7 +37,7 @@
 			"DrawerLine95_100Sine",
 			"DrawerTestPage"			
 		],
-		"random": true,
+		"random": false,
 		"loop": true
 	}
 
