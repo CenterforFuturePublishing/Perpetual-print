@@ -659,167 +659,228 @@ class DrawerLine0_100SineDist implements Drawer {
   }
 }
 
+// PERPETUAL PRINTING V2
+// RAINBOW SQUARES
+class DrawerRainbowSquares implements Drawer {
+  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+    // NUMBER OF COLUMNS
+    int col = 24;
+
+    // LINES TO SKIP
+    int offset = 2;
+
+    // VALUES FOR HUE AND SATURATION
+    // BASE
+    int val = 18;
+    // +-
+    int inc = 12;
+    // FINAL VALUES
+    int min = val - inc;
+    int max = val + inc;
+
+    int h = 0, s = 0, b = 0;
+    float step, hueRange, satRange, briRange, hue, sat, bri;
+    p.colorMode(HSB, 1, 1, 1);
+    step = p.width / col;
+    p.noStroke();
+
+    // SET COLOR RANGE FOR EACH PAGE
+    hueRange = round(random(min, max));
+    satRange = round(random(min, max));
+    briRange = round(random(min, max));
+
+    // SQUARE GRID WITH COLOR VARIATION
+    for (int y = 0; y < col; y++) {
+      for (int x = 0; x < col; x++) {
+        // 
+        if (h > hueRange) {
+          h = 0;
+        }
+
+        if (s > satRange) {
+          s = 0;
+        }
+
+        if (b > briRange) {
+          b = 0;
+        }
+
+        hue = h / hueRange;
+        sat = 1;
+        bri = 1;
+        p.fill(hue, sat, bri);
+
+        p.rect(x * step, y * step * offset, step, step);
+        h++;
+        s++;
+        b++;
+      }
+    }
+    
+    return iPage0 + 1 < 1;
+  }
+}
 
 /*
 // LINES 100-0 % WIDTH
-// Lines full-width to 0, stroke weight 1
-class DrawerLine100_0 implements Drawer {
-
-  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
-
-    int step = 10; // defines the distance between lines
-
-    p.noFill();
-    p.stroke(0);
-    p.strokeWeight(1);
-
-    for (int i = 0; i < p.height; i += step) {
-      // Changes the weight of the line 
-      float w = map(i, 0, p.height, p.width, 0);
-
-      p.line(0, i, w, i); // draw a line
-    }
-
-    return iPage0 + 1 < 1;
-  }
-}
-
-
-// LINES SINE WIDTH
-// Lines sine between full-width-0, stroke weight 1
-class DrawerLineSine implements Drawer {
-
-  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
-
-    int step = 10; // defines the distance between the lines
-
-    p.noFill();
-    p.stroke(0);
-    p.strokeWeight(1);
-
-    for (int i = 0; i < p.height; i += step) {
-      // Diminishes the length of the line
-      float w01 = map(i, 0, p.height, p.width, 0);
-
-      // Change the length of the line with a sine
-      float w02 = Math.abs(sin(i * 0.001)) * p.width;
-
-      p.line(0, i, p.width - w02, i);
-    }
-
-    return iPage0 + 1 < 1;
-  }
-}
-
-
-// POINTS 100 % WIDTH
-// This drawer creates a pattern based on points
-class DrawerPoint100 implements Drawer {
-
-  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
-
-    int step = 10; // changes the space between the dots
-
-    p.noFill();
-    p.stroke(0);
-
-    //p.rotate(radians(iPage0)); // change the angle of the next page
-
-    for (int x = 0; x < p.width; x += step) {
-      for (int y = 0; y < p.height; y += step) {
-        // Changes the weight of the point
-        float sw = map(y, 0, p.height, 0.5, 3);
-        p.strokeWeight(sw);
-
-        p.point(x, y);
-      }
-    }
-
-    return iPage0 + 1 < 1;
-  }
-}
-
-
-// POINTS 50 % WIDTH
-// This drawer creates a pattern based on points
-class DrawerPoint50 implements Drawer {
-
-  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
-
-    int step = 10; // changes the space between the dots
-
-    p.noFill();
-    p.stroke(0);
-
-    //p.rotate(radians(iPage0)); // change the angle of the next page
-
-    for (int x = 0; x < p.width * 0.5; x += step) {
-      for (int y = 0; y < p.height; y += step) {
-        // Changes the weight of the point
-        float sw = map(y, 0, p.height, 0.5, 3);
-        p.strokeWeight(sw);
-
-        p.point(x, y);
-      }
-    }
-
-    return iPage0 + 1 < 1;
-  }
-}
-
-
-// POINTS 5 % WIDTH
-// This drawer creates a pattern based on points
-class DrawerPoint5 implements Drawer {
-
-  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
-
-    int step = 10; // changes the space between the dots
-
-    p.noFill();
-    p.stroke(0);
-
-    //p.rotate(radians(iPage0)); // change the angle of the next page
-
-    for (int x = 0; x < p.width * 0.05; x += step) {
-      for (int y = 0; y < p.height; y += step) {
-        // Changes the weight of the point
-        float sw = map(y, 0, p.height, 0.5, 3);
-        p.strokeWeight(sw);
-
-        p.point(x, y);
-      }
-    }
-
-    return iPage0 + 1 < 1;
-  }
-}
-
-
-// POINTS SINE SIZE
-// This drawer creates a pattern based on points
-class DrawerPointSine implements Drawer {
-
-  @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
-
-    int step = 10; // changes the space between the dots
-
-    p.noFill();
-    p.stroke(0);
-
-    //p.rotate(radians(iPage0)); // change the angle of the next page
-
-    for (int x = 0; x < p.width; x += step) {
-      for (int y = 0; y < p.height; y += step) {
-        // Changes the weight of the point
-        float sw = map(sin(y * 0.005), -1, 1, 0.5, 3);
-        p.strokeWeight(sw);
-
-        p.point(x, y);
-      }
-    }
-
-    return iPage0 + 1 < 1;
-  }
-}
-*/
+ // Lines full-width to 0, stroke weight 1
+ class DrawerLine100_0 implements Drawer {
+ 
+ @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+ 
+ int step = 10; // defines the distance between lines
+ 
+ p.noFill();
+ p.stroke(0);
+ p.strokeWeight(1);
+ 
+ for (int i = 0; i < p.height; i += step) {
+ // Changes the weight of the line 
+ float w = map(i, 0, p.height, p.width, 0);
+ 
+ p.line(0, i, w, i); // draw a line
+ }
+ 
+ return iPage0 + 1 < 1;
+ }
+ }
+ 
+ 
+ // LINES SINE WIDTH
+ // Lines sine between full-width-0, stroke weight 1
+ class DrawerLineSine implements Drawer {
+ 
+ @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+ 
+ int step = 10; // defines the distance between the lines
+ 
+ p.noFill();
+ p.stroke(0);
+ p.strokeWeight(1);
+ 
+ for (int i = 0; i < p.height; i += step) {
+ // Diminishes the length of the line
+ float w01 = map(i, 0, p.height, p.width, 0);
+ 
+ // Change the length of the line with a sine
+ float w02 = Math.abs(sin(i * 0.001)) * p.width;
+ 
+ p.line(0, i, p.width - w02, i);
+ }
+ 
+ return iPage0 + 1 < 1;
+ }
+ }
+ 
+ 
+ // POINTS 100 % WIDTH
+ // This drawer creates a pattern based on points
+ class DrawerPoint100 implements Drawer {
+ 
+ @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+ 
+ int step = 10; // changes the space between the dots
+ 
+ p.noFill();
+ p.stroke(0);
+ 
+ //p.rotate(radians(iPage0)); // change the angle of the next page
+ 
+ for (int x = 0; x < p.width; x += step) {
+ for (int y = 0; y < p.height; y += step) {
+ // Changes the weight of the point
+ float sw = map(y, 0, p.height, 0.5, 3);
+ p.strokeWeight(sw);
+ 
+ p.point(x, y);
+ }
+ }
+ 
+ return iPage0 + 1 < 1;
+ }
+ }
+ 
+ 
+ // POINTS 50 % WIDTH
+ // This drawer creates a pattern based on points
+ class DrawerPoint50 implements Drawer {
+ 
+ @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+ 
+ int step = 10; // changes the space between the dots
+ 
+ p.noFill();
+ p.stroke(0);
+ 
+ //p.rotate(radians(iPage0)); // change the angle of the next page
+ 
+ for (int x = 0; x < p.width * 0.5; x += step) {
+ for (int y = 0; y < p.height; y += step) {
+ // Changes the weight of the point
+ float sw = map(y, 0, p.height, 0.5, 3);
+ p.strokeWeight(sw);
+ 
+ p.point(x, y);
+ }
+ }
+ 
+ return iPage0 + 1 < 1;
+ }
+ }
+ 
+ 
+ // POINTS 5 % WIDTH
+ // This drawer creates a pattern based on points
+ class DrawerPoint5 implements Drawer {
+ 
+ @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+ 
+ int step = 10; // changes the space between the dots
+ 
+ p.noFill();
+ p.stroke(0);
+ 
+ //p.rotate(radians(iPage0)); // change the angle of the next page
+ 
+ for (int x = 0; x < p.width * 0.05; x += step) {
+ for (int y = 0; y < p.height; y += step) {
+ // Changes the weight of the point
+ float sw = map(y, 0, p.height, 0.5, 3);
+ p.strokeWeight(sw);
+ 
+ p.point(x, y);
+ }
+ }
+ 
+ return iPage0 + 1 < 1;
+ }
+ }
+ 
+ 
+ // POINTS SINE SIZE
+ // This drawer creates a pattern based on points
+ class DrawerPointSine implements Drawer {
+ 
+ @Override boolean drawPage(PGraphics p, int iPage0, String filePath) {
+ 
+ int step = 10; // changes the space between the dots
+ 
+ p.noFill();
+ p.stroke(0);
+ 
+ //p.rotate(radians(iPage0)); // change the angle of the next page
+ 
+ for (int x = 0; x < p.width; x += step) {
+ for (int y = 0; y < p.height; y += step) {
+ // Changes the weight of the point
+ float sw = map(sin(y * 0.005), -1, 1, 0.5, 3);
+ p.strokeWeight(sw);
+ 
+ p.point(x, y);
+ }
+ }
+ 
+ return iPage0 + 1 < 1;
+ }
+ }
+ */

@@ -1,0 +1,38 @@
+
+20180601 15:34:46	Available drawers:
+20180601 15:34:46	    DrawerEmpty
+20180601 15:34:46	    DrawerLine0_100Sine
+20180601 15:34:46	    DrawerLine0_100SineDist
+20180601 15:34:46	    DrawerLine0_50Sine
+20180601 15:34:46	    DrawerLine0_5Sine
+20180601 15:34:46	    DrawerLine10_15Sine
+20180601 15:34:46	    DrawerLine15_20Sine
+20180601 15:34:46	    DrawerLine20_25Sine
+20180601 15:34:46	    DrawerLine25_30Sine
+20180601 15:34:46	    DrawerLine30_35Sine
+20180601 15:34:46	    DrawerLine35_40Sine
+20180601 15:34:46	    DrawerLine40_45Sine
+20180601 15:34:46	    DrawerLine45_50Sine
+20180601 15:34:46	    DrawerLine50_100Sine
+20180601 15:34:46	    DrawerLine50_55Sine
+20180601 15:34:46	    DrawerLine55_60Sine
+20180601 15:34:46	    DrawerLine5_10Sine
+20180601 15:34:46	    DrawerLine60_65Sine
+20180601 15:34:46	    DrawerLine65_70Sine
+20180601 15:34:46	    DrawerLine70_75Sine
+20180601 15:34:46	    DrawerLine75_80Sine
+20180601 15:34:46	    DrawerLine80_85Sine
+20180601 15:34:46	    DrawerLine85_90Sine
+20180601 15:34:46	    DrawerLine90_95Sine
+20180601 15:34:46	    DrawerLine95_100Sine
+20180601 15:34:46	    DrawerTestPage
+
+20180601 15:34:54	saving settings
+
+20180601 15:35:02	saving settings
+
+20180601 15:35:03	saving settings
+
+20180601 15:35:05	preview button pressed
+20180601 15:35:05	Drawing with DrawerLine0_100SineDist
+20180601 15:35:05	saving settings

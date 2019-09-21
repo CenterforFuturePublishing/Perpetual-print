@@ -1,11 +1,8 @@
 [
 	{
-		"name": "Ma séquence 1",
-		"description": "Une séquence pour plusieurs jours et sur plusieurs imprimantes en même temps",
+		"name": "0 Lines",
+		"description": "Plotter central pour Weltformat 2019",
 		"DISABLED_days": [
-			"mardi", 
-			"mercredi",
-			"vendredi"
 			],
 		"printers" : [
 			"HP_printer_1"
@@ -35,11 +32,37 @@
 			"DrawerLine85_90Sine",
 			"DrawerLine90_95Sine",
 			"DrawerLine95_100Sine",
-			"DrawerTestPage"			
+			"DrawerTestPage"
+		],
+		"random": true,
+		"loop": true
+	}
+	{
+		"name": "1 Rainbow Squares",
+		"description": "Plotter gauche pour Weltformat 2019",
+		"DISABLED_days": [
+			],
+		"printers" : [
+			"HP_printer_2"
+			],
+		"drawers": [
+			"Rainbow Squares"
 		],
 		"random": false,
 		"loop": true
 	}
-
-
+	{
+		"name": "2 Rainbow Squares",
+		"description": "Plotter droite pour Weltformat 2019",
+		"DISABLED_days": [
+			],
+		"printers" : [
+			"HP_printer_3"
+			],
+		"drawers": [
+			"Rainbow Squares"
+		],
+		"random": false,
+		"loop": true
+	}
 ]

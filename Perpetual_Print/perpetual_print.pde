@@ -34,10 +34,12 @@ PrintWriter logger = null;
 SimpleDateFormat sdfLogger;
 int lastLogMs = 0;
 
+public void settings() {
+  size(400, 600);
+}
+
 
 void setup () {
-
-  size(400, 600);
   PFont font = createFont("arial", 16);
 
   loadSettings();

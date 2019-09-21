@@ -1,4 +1,3 @@
-
 class Sequence {
 
   // Data from sequences config file
