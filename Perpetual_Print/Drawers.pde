@@ -716,7 +716,7 @@ class DrawerRainbowSquares implements Drawer {
         b++;
       }
     }
-    
+
     return iPage0 + 1 < 1;
   }
 }
