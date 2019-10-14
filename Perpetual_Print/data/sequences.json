@@ -35,7 +35,8 @@
 			"DrawerTestPage"
 		],
 		"random": true,
-		"loop": true
+		"loop": true,
+		"delay": 1,
 	},
 	{
 		"name": "1 Rainbow Squares",
@@ -49,7 +50,8 @@
 			"DrawerRainbowSquares"
 		],
 		"random": false,
-		"loop": true
+		"loop": true,
+		"delay": 0.5,
 	},
 	{
 		"name": "2 Rainbow Squares",

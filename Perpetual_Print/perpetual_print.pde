@@ -1,3 +1,7 @@
+// Perpetual Print main program
+//
+// Pierre Rossel 2018-05-19
+
 import controlP5.*;
 import processing.pdf.*;
 import static javax.swing.JOptionPane.*;

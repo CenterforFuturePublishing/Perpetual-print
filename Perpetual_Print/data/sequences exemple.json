@@ -17,7 +17,8 @@
 			"DrawerLine100"
 		],
 		"random": false,
-		"loop": true
+		"loop": true,
+		"delay": 1,
 	},
 
 
@@ -31,7 +32,8 @@
 			"DrawerLine100"
 		],
 		"random": false,
-		"loop": true
+		"loop": true,
+		"delay": 0,
 	},
 
 

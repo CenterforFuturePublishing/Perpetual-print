@@ -1,3 +1,9 @@
+// Sequence class
+//
+// Defines what needs to be drawn, sent to which printer, which day, etc.
+//
+// Pierre Rossel 2018-05-19
+
 class Sequence {
 
   // Data from sequences config file
@@ -7,11 +13,14 @@ class Sequence {
   StringList drawers = new StringList();
   boolean random = false;
   boolean loop = true;
+  float delay = 0; // in minutes
 
   // last drawer index used in drawers list 
   int iLastDrawer = -1;
   
   boolean active = true;
+  
+  int pauseEnd = 0; // End of pause (millis()) 
   
   int checkPeriod = 5000; // ms
   int nextCheck = 0;
@@ -24,7 +33,7 @@ class Sequence {
     
     int ms = millis();
     
-    if (active && ms > nextCheck) {
+    if (active && ms >= nextCheck && ms >= pauseEnd) {
       nextCheck += checkPeriod;
       
       String currentDay = getCurrentDayOfWeek();
@@ -54,6 +63,7 @@ class Sequence {
 
     random = config.getBoolean("random", random);
     loop = config.getBoolean("loop", loop);
+    delay = config.getFloat("delay", delay);
 
     // Check valid configuration for days
     String error = checkListValues(days, new StringList("lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"));
@@ -90,13 +100,20 @@ class Sequence {
   }
 
   void sendNextDrawing () {
-    log("***** sendNextDrawing *****");
+    log("***** sendNextDrawing for sequence " + name + " *****");
 
     String drawerClassName = nextDrawer();
     if (drawerClassName == null) {
       log("no more drawer");
       active = false;
       return;
+    }
+
+    // set the pause between drawings
+    if (delay > 0) {
+      int delayMs = round(delay * 60 * 1000);
+      pauseEnd = millis() + delayMs;
+      log("Setting pause until " + new SimpleDateFormat("Y-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis() + delayMs)));
     }
 
     String sFilePath = generatePDF(false, drawerClassName);
