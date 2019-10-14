@@ -352,6 +352,7 @@ void log(String str) {
     String timestamp = sdfLogger.format(new Date());
     logFile = new File(logFolder + "/log " + timestamp + ".txt");
     logger = createWriter(logFile);
+    println("Log file: " + logFile.getAbsolutePath());
 
     sdfLogger.applyPattern("YMMdd HH:mm:ss");
   }

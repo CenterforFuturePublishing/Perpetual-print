@@ -36,7 +36,7 @@
 		],
 		"random": true,
 		"loop": true
-	}
+	},
 	{
 		"name": "1 Rainbow Squares",
 		"description": "Plotter gauche pour Weltformat 2019",
@@ -46,11 +46,11 @@
 			"HP_printer_2"
 			],
 		"drawers": [
-			"Rainbow Squares"
+			"DrawerRainbowSquares"
 		],
 		"random": false,
 		"loop": true
-	}
+	},
 	{
 		"name": "2 Rainbow Squares",
 		"description": "Plotter droite pour Weltformat 2019",
@@ -60,7 +60,7 @@
 			"HP_printer_3"
 			],
 		"drawers": [
-			"Rainbow Squares"
+			"DrawerRainbowSquares"
 		],
 		"random": false,
 		"loop": true

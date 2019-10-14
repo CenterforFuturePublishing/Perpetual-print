@@ -184,7 +184,8 @@ void setupSequences() {
     configSeq = loadJSONArray("sequences.json");
   } 
   catch (Exception e) {
-    //log(e.toString());
+    log("Error in sequences.json");
+    log(e.toString());
     return;
   }
 
